@@ -34,7 +34,7 @@ const createRol = async (req, res = response) => {
 
         res.json({
             ok: true,
-            rol: roleWithRef
+            role: roleWithRef
         })
 
     } catch (error) {
@@ -60,7 +60,7 @@ const updateRol = async (req, res = response) => {
 
         res.json({
             ok: true,
-            rol: roleWithRef
+            role: roleWithRef
         });
 
 
@@ -92,7 +92,7 @@ const deleteRol = async (req, res = response) => {
 
         res.json({
             ok: true,
-            rol: roleWithRef
+            role: roleWithRef
         });
 
 

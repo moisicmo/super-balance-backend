@@ -4,10 +4,10 @@ const { PermisionSchema } = require('./../../models');
 const getPermisions = async (req, res = response) => {
 
     try {
-        const permisos = await PermisionSchema.find({ state: true });
+        const permissions = await PermisionSchema.find({ state: true });
         res.json({
             ok: true,
-            permisos
+            permissions
         });
     } catch (error) {
         console.log(error)
@@ -27,7 +27,7 @@ const createPermision = async (req, res = response) => {
 
         res.json({
             ok: true,
-            permiso: permisionSave
+            permission: permisionSave
         })
 
     } catch (error) {

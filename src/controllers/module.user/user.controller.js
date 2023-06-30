@@ -41,7 +41,7 @@ const createUser = async (req, res = response) => {
 
         res.json({
             ok: true,
-            usuario: userWithRef
+            user: userWithRef
         })
 
     } catch (error) {
@@ -71,7 +71,7 @@ const updateUser = async (req, res = response) => {
 
         res.json({
             ok: true,
-            usuario: userWithRef
+            user: userWithRef
         });
 
 
@@ -103,7 +103,7 @@ const deleteUser = async (req, res = response) => {
 
         res.json({
             ok: true,
-            usuario: userWithRef
+            user: userWithRef
         });
 
 

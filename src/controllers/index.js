@@ -1,4 +1,3 @@
-
 const {
     getUsers,
     createUser,
@@ -21,6 +20,12 @@ const {
     getPermisions,
     createPermision,
 } = require('./module.user/permision.controller');
+const {
+    getWarehouses,
+    createWarehouse,
+    updateWarehouse,
+    deleteWarehouse
+} = require('./module.warehouse/warehouse.controller');
 module.exports = {
     //module users
     getUsers,
@@ -37,4 +42,9 @@ module.exports = {
     deleteRol,
     getPermisions,
     createPermision,
+    //module warehouses
+    getWarehouses,
+    createWarehouse,
+    updateWarehouse,
+    deleteWarehouse
 }

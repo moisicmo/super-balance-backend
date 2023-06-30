@@ -36,7 +36,7 @@ class Server {
             typeMethodPay: '/api/typeMethodPay',
             credit: '/api/credit',
             paymentCredit: '/api/paymentCredit',
-            kardexCustomer: '/api/kardexCustomer',
+            kardexCredit: '/api/kardexCredit',
             //module oreders
             outputReservation: '/api/outputReservation',
             order: '/api/order',
@@ -84,7 +84,8 @@ class Server {
         this.app.use(this.paths.typeUser, require('./routes/module.user/type.user.route'));
         this.app.use(this.paths.role, require('./routes/module.user/role.route'));
         this.app.use(this.paths.permision, require('./routes/module.user/permision.route'));
-        //
+        //module warehouses
+        this.app.use(this.paths.warehouse, require('./routes/module.warehouse/warehouse.route'));
         // this.app.use(this.paths.event, require('./routes/events'));
         // this.app.use(this.paths.category, require('./routes/categories'));
         // this.app.use(this.paths.user, require('./routes/users'));

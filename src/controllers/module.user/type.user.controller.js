@@ -33,7 +33,7 @@ const createTypeUser = async (req, res = response) => {
 
         res.json({
             ok: true,
-            tipoUsuario: typeUserWithRef
+            typeUser: typeUserWithRef
         })
 
     } catch (error) {
@@ -60,7 +60,7 @@ const updateTypeUser = async (req, res = response) => {
             .populate('user', 'name');
         res.json({
             ok: true,
-            tipoUsuario: typeUserWithRef
+            typeUser: typeUserWithRef
         });
 
 
@@ -80,18 +80,18 @@ const deleteTypeUser = async (req, res = response) => {
     try {
         const typeUser = await TypeUserSchema.findById(typeUserId)
 
-        const nuevoTipoUsuario = {
+        const newTypeUser = {
             ...typeUser,
             state: false
         }
 
-        const typeUserDelete = await TypeUserSchema.findByIdAndUpdate(typeUserId, nuevoTipoUsuario, { new: true },);
+        const typeUserDelete = await TypeUserSchema.findByIdAndUpdate(typeUserId, newTypeUser, { new: true },);
 
         const typeUserWithRef = await TypeUserSchema.findById(typeUserDelete.id)
             .populate('user', 'name');
         res.json({
             ok: true,
-            tipoUsuario: typeUserWithRef
+            typeUser: typeUserWithRef
         });
 
 
