@@ -5,7 +5,7 @@ const getTypeUsers = async (req, res = response) => {
 
     try {
         const typeUsers = await TypeUserSchema.find()
-            .populate('user', 'name');
+            .populate('userId', 'name');
 
         res.json({
             ok: true,
@@ -29,7 +29,7 @@ const createTypeUser = async (req, res = response) => {
 
         const typeUserSave = await typeUser.save();
         const typeUserWithRef = await TypeUserSchema.findById(typeUserSave.id)
-            .populate('user', 'name');
+            .populate('userId', 'name');
 
         res.json({
             ok: true,
@@ -57,7 +57,7 @@ const updateTypeUser = async (req, res = response) => {
         const typeUserUpdate = await TypeUserSchema.findByIdAndUpdate(typeUserId, newTypeUser, { new: true },);
 
         const typeUserWithRef = await TypeUserSchema.findById(typeUserUpdate.id)
-            .populate('user', 'name');
+            .populate('userId', 'name');
         res.json({
             ok: true,
             typeUser: typeUserWithRef

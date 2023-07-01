@@ -6,7 +6,7 @@ const getRoles = async (req, res = response) => {
 
         const roles = await RoleSchema.find()
             .populate('permisionIds')
-            .populate('user', 'name');
+            .populate('userId', 'name');
 
         res.json({
             ok: true,
@@ -30,7 +30,7 @@ const createRol = async (req, res = response) => {
         const roleSave = await rol.save();
         const roleWithRef = await RoleSchema.findById(roleSave.id)
             .populate('permisionIds')
-            .populate('user', 'name');
+            .populate('userId', 'name');
 
         res.json({
             ok: true,
@@ -56,7 +56,7 @@ const updateRol = async (req, res = response) => {
         const roleUpdate = await RoleSchema.findByIdAndUpdate(rolId, newRole, { new: true },);
         const roleWithRef = await RoleSchema.findById(roleUpdate.id)
             .populate('permisionIds')
-            .populate('user', 'name');
+            .populate('userId', 'name');
 
         res.json({
             ok: true,
@@ -88,7 +88,7 @@ const deleteRol = async (req, res = response) => {
         const roleDelete = await RoleSchema.findByIdAndUpdate(rolId, newRole, { new: true },);
         const roleWithRef = await RoleSchema.findById(roleDelete.id)
             .populate('permisionIds')
-            .populate('user', 'name');
+            .populate('userId', 'name');
 
         res.json({
             ok: true,

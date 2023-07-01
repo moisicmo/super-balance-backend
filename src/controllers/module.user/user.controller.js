@@ -5,9 +5,9 @@ const { UserSchema } = require('./../../models');
 const getUsers = async (req, res = response) => {
     try {
         const users = await UserSchema.find()
-            .populate('role', 'name')
-            .populate('typeUser', 'name')
-            .populate('responsible', 'name');
+            .populate('roleId', 'name')
+            .populate('typeUserId', 'name')
+            .populate('responsibleId', 'name');
 
         res.json({
             ok: true,
@@ -35,9 +35,9 @@ const createUser = async (req, res = response) => {
 
         const userSave = await user.save();
         const userWithRef = await UserSchema.findById(userSave.id)
-            .populate('rol', 'name')
-            .populate('typeUser', 'name')
-            .populate('responsible', 'name');
+            .populate('roleId', 'name')
+            .populate('typeUserId', 'name')
+            .populate('responsibleId', 'name');
 
         res.json({
             ok: true,
@@ -65,9 +65,9 @@ const updateUser = async (req, res = response) => {
 
         const userUpdate = await UserSchema.findByIdAndUpdate(userId, newUser, { new: true },);
         const userWithRef = await UserSchema.findById(userUpdate.id)
-            .populate('rol', 'name')
-            .populate('typeUser', 'name')
-            .populate('responsible', 'name');
+            .populate('roleId', 'name')
+            .populate('typeUserId', 'name')
+            .populate('responsibleId', 'name');
 
         res.json({
             ok: true,
@@ -97,9 +97,9 @@ const deleteUser = async (req, res = response) => {
 
         const userDelete = await UserSchema.findByIdAndUpdate(userId, newUser, { new: true },);
         const userWithRef = await UserSchema.findById(userDelete.id)
-            .populate('rol', 'name')
-            .populate('typeUser', 'name')
-            .populate('responsible', 'name');
+            .populate('roleId', 'name')
+            .populate('typeUserId', 'name')
+            .populate('responsibleId', 'name');
 
         res.json({
             ok: true,

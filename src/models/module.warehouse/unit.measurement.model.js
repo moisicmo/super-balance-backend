@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const CategorySchema = Schema({
+const UnitMeasurementSchema = Schema({
     name: {
         type: String,
         required: [true, 'El nombre es obligatorio']
@@ -15,10 +15,10 @@ const CategorySchema = Schema({
         default: true
     },
 });
-CategorySchema.method('toJSON', function () {
+UnitMeasurementSchema.method('toJSON', function () {
     const { __v, ...object } = this.toObject();
     return object;
 });
 
 
-module.exports = model('Categories', CategorySchema);
+module.exports = model('MeasurementUnits', UnitMeasurementSchema);

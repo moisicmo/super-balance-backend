@@ -5,6 +5,7 @@ const getWarehouses = async (req, res = response) => {
 
     try {
         const warehouses = await WarehouseSchema.find()
+            .populate('userId', 'name')
             .populate('userIds');
 
         res.json({
@@ -29,6 +30,7 @@ const createWarehouse = async (req, res = response) => {
 
         const warehouseSave = await warehouse.save();
         const warehouseWithRef = await WarehouseSchema.findById(warehouseSave.id)
+            .populate('userId', 'name')
             .populate('userIds');
 
         res.json({
@@ -57,6 +59,7 @@ const updateWarehouse = async (req, res = response) => {
         const warehouseUpdate = await WarehouseSchema.findByIdAndUpdate(warehouseId, newWarehouse, { new: true },);
 
         const warehousewithRef = await WarehouseSchema.findById(warehouseUpdate.id)
+            .populate('userId', 'name')
             .populate('userIds');
         res.json({
             ok: true,
@@ -88,7 +91,8 @@ const deleteWarehouse = async (req, res = response) => {
         const warehouseDelete = await WarehouseSchema.findByIdAndUpdate(warehouseId, newWarehouse, { new: true },);
 
         const warehouseWithRef = await WarehouseSchema.findById(warehouseDelete.id)
-            .populate('user', 'name');
+            .populate('userId', 'name')
+            .populate('userIds');
         res.json({
             ok: true,
             warehouse: warehouseWithRef

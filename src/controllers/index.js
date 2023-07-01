@@ -26,6 +26,36 @@ const {
     updateWarehouse,
     deleteWarehouse
 } = require('./module.warehouse/warehouse.controller');
+const {
+    getCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory
+} = require('./module.warehouse/categorie.controller');
+const {
+    getMeasurementUnits,
+    createunitMeasurement,
+    updateunitMeasurement,
+    deleteunitMeasurement,
+} = require('./module.warehouse/unit.measurement.controller');
+const {
+    getProducts,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+} = require('./module.warehouse/product.controller');
+const {
+    getProductStatus,
+    createProductStatus,
+    updateProductStatus,
+    deleteProductStatus,
+} = require('./module.warehouse/product.status.controller');
+const {
+    getPrices,
+    createPrice,
+    updatePrice,
+    deletePrice,
+} = require('./module.warehouse/price.controller');
 module.exports = {
     //module users
     getUsers,
@@ -46,5 +76,25 @@ module.exports = {
     getWarehouses,
     createWarehouse,
     updateWarehouse,
-    deleteWarehouse
+    deleteWarehouse,
+    getCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+    getMeasurementUnits,
+    createunitMeasurement,
+    updateunitMeasurement,
+    deleteunitMeasurement,
+    getProducts,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getProductStatus,
+    createProductStatus,
+    updateProductStatus,
+    deleteProductStatus,
+    getPrices,
+    createPrice,
+    updatePrice,
+    deletePrice,
 }

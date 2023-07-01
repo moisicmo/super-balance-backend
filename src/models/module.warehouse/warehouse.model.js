@@ -1,6 +1,11 @@
 const { Schema, model } = require('mongoose');
 
 const WarehouseSchema = Schema({
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Users',
+        required: true
+    },
     userIds: [
         {
             type: Schema.Types.ObjectId,

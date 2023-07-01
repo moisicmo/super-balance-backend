@@ -1,24 +1,40 @@
 const { Schema, model } = require('mongoose');
 
 const ProductSchema = Schema({
-    userIds: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Users',
-            required: true
-        }
-    ],
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Users',
+        required: true
+    },
+    categoryId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Categories',
+        required: true
+    },
+    unitMeasurementId: {
+        type: Schema.Types.ObjectId,
+        ref: 'MeasurementUnits',
+        required: true
+    },
     name: {
         type: String,
         required: [true, 'El nombre es obligatorio']
     },
-    address: {
+    image: {
         type: String,
-        required: [true, 'La dirección es obligatorio']
+        default: null
     },
-    phone: {
-        type: Number,
-        required: [true, 'El número es obligatorio']
+    barCode: {
+        type: String,
+        default: null
+    },
+    visible: {
+        type: Boolean,
+        default: false
+    },
+    type: {
+        type: String,
+        default: 'Product'
     },
     state: {
         type: Boolean,

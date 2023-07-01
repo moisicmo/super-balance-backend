@@ -22,9 +22,10 @@ class Server {
             permision: '/api/permision',
             //module warehouses
             warehouse: '/api/warehouse',
-            product: '/api/product',
             category: '/api/category',
-            measurementUnit: '/api/measurementUnit',
+            unitMeasurement: '/api/unitMeasurement',
+            product: '/api/product',
+            productStatus: '/api/productStatus',
             price: '/api/price',
             input: '/api/input',
             output: '/api/output',
@@ -86,17 +87,11 @@ class Server {
         this.app.use(this.paths.permision, require('./routes/module.user/permision.route'));
         //module warehouses
         this.app.use(this.paths.warehouse, require('./routes/module.warehouse/warehouse.route'));
-        // this.app.use(this.paths.event, require('./routes/events'));
-        // this.app.use(this.paths.category, require('./routes/categories'));
-        // this.app.use(this.paths.user, require('./routes/users'));
-        // this.app.use(this.paths.typeUser, require('./routes/type_users'));
-        // this.app.use(this.paths.permision, require('./routes/permisions'));
-        // this.app.use(this.paths.rol, require('./routes/roles'));
-        // this.app.use(this.paths.student, require('./routes/students'));
-        // this.app.use(this.paths.guests, require('./routes/guests'));
-        // this.app.use(this.paths.careers, require('./routes/careers'));
-        // this.app.use(this.paths.dashboard, require('./routes/dashboard'));
-        // this.app.use(this.paths.reports, require('./routes/reports'))
+        this.app.use(this.paths.category, require('./routes/module.warehouse/category.route'));
+        this.app.use(this.paths.unitMeasurement, require('./routes/module.warehouse/unit.measurement.route'));
+        this.app.use(this.paths.product, require('./routes/module.warehouse/product.route'));
+        this.app.use(this.paths.productStatus, require('./routes/module.warehouse/product.status.route'));
+        this.app.use(this.paths.price, require('./routes/module.warehouse/price.route'));
 
     }
 

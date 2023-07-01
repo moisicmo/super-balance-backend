@@ -5,7 +5,7 @@ const TypeUserSchema = Schema({
         type: String,
         required: [true, 'El nombre es obligatorio']
     },
-    user: {
+    userId: {
         type: Schema.Types.ObjectId,
         ref: 'Users',
         required: true
