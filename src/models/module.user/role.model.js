@@ -15,7 +15,6 @@ const RoleSchema = Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'Users',
-        required: true
     },
     state: {
         type: Boolean,
@@ -24,11 +23,13 @@ const RoleSchema = Schema({
 });
 
 RoleSchema.method('toJSON', function () {
-    const { __v, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
     object.permisionIds.forEach(e => {
+        e.id = e._id;
+        delete e._id;
         delete e.__v;
     });
     return object;
 });
-
 module.exports = model('Roles', RoleSchema);

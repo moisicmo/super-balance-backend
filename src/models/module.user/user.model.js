@@ -47,7 +47,29 @@ const UserSchema = Schema({
 });
 
 UserSchema.method('toJSON', function () {
-    const { __v, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    if (object.roleId) {
+        object.roleId.id = object.roleId._id
+        delete object.roleId._id;
+        delete object.roleId.__v;
+        if (object.roleId.permisionIds) {
+            object.roleId.permisionIds.forEach(e => {
+                e.id = e._id;
+                delete e._id;
+                delete e.__v;
+            });
+        }
+    }
+    if (object.typeUserId) {
+        object.typeUserId.id = object.typeUserId._id
+        delete object.typeUserId._id;
+        delete object.typeUserId.__v;
+    }
+    if (object.responsibleId) {
+        object.responsibleId.id = object.responsibleId._id
+        delete object.responsibleId._id;
+    }
     return object;
 });
 

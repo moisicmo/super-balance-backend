@@ -6,10 +6,13 @@ const {
     permisionExists,
 } = require('./db-validators');
 
+const {
+    generarJWT
+} = require('./jwt')
 module.exports = {
     emailExists,
     typeUserExists,
     roleExists,
-    permisionExists
-
+    permisionExists,
+    generarJWT
 }

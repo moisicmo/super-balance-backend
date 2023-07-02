@@ -1,4 +1,7 @@
 const {
+    authUser
+} = require('./auth.controller');
+const {
     getUsers,
     createUser,
     updateUser,
@@ -69,6 +72,7 @@ const {
     createKardexProduct,
 } = require('./module.warehouse/kardex.product.controller')
 module.exports = {
+    authUser,
     //module users
     getUsers,
     createUser,

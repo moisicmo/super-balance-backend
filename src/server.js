@@ -79,7 +79,7 @@ class Server {
 
     routes() {
         //auth
-        // this.app.use(this.paths.auth, require('./routes/auth.route'));
+        this.app.use(this.paths.auth, require('./routes/auth.route'));
         //module users
         this.app.use(this.paths.user, require('./routes/module.user/user.route'));
         this.app.use(this.paths.typeUser, require('./routes/module.user/type.user.route'));
@@ -93,7 +93,9 @@ class Server {
         this.app.use(this.paths.productStatus, require('./routes/module.warehouse/product.status.route'));
         this.app.use(this.paths.price, require('./routes/module.warehouse/price.route'));
         this.app.use(this.paths.kardexProduct, require('./routes/module.warehouse/kardex.product.route'));
-        //
+        //module customers
+        //module orders
+        //module reports
     }
 
     listen() {
