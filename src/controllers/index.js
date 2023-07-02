@@ -56,6 +56,18 @@ const {
     updatePrice,
     deletePrice,
 } = require('./module.warehouse/price.controller');
+const {
+    getOutputs,
+    createOutput,
+} = require('./module.warehouse/output.controller');
+const {
+    getInputs,
+    createInput,
+} = require('./module.warehouse/input.controller');
+const {
+    getKardexProducts,
+    createKardexProduct,
+} = require('./module.warehouse/kardex.product.controller')
 module.exports = {
     //module users
     getUsers,
@@ -97,4 +109,10 @@ module.exports = {
     createPrice,
     updatePrice,
     deletePrice,
+    getOutputs,
+    createOutput,
+    getInputs,
+    createInput,
+    getKardexProducts,
+    createKardexProduct,
 }

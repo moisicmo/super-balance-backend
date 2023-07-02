@@ -27,8 +27,8 @@ class Server {
             product: '/api/product',
             productStatus: '/api/productStatus',
             price: '/api/price',
-            input: '/api/input',
             output: '/api/output',
+            input: '/api/input',
             kardexProduct: '/api/kardexProduct',
             //module customers
             customer: '/api/customer',
@@ -92,7 +92,8 @@ class Server {
         this.app.use(this.paths.product, require('./routes/module.warehouse/product.route'));
         this.app.use(this.paths.productStatus, require('./routes/module.warehouse/product.status.route'));
         this.app.use(this.paths.price, require('./routes/module.warehouse/price.route'));
-
+        this.app.use(this.paths.kardexProduct, require('./routes/module.warehouse/kardex.product.route'));
+        //
     }
 
     listen() {
