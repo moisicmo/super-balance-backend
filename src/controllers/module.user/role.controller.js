@@ -4,7 +4,7 @@ const { RoleSchema } = require('./../../models');
 const getRoles = async (req, res = response) => {
     try {
 
-        const roles = await RoleSchema.find()
+        const roles = await RoleSchema.find({ state: true })
             .populate('permisionIds')
             .populate('userId', 'name');
 
@@ -80,10 +80,8 @@ const deleteRol = async (req, res = response) => {
     try {
         const role = await RoleSchema.findById(rolId)
 
-        const newRole = {
-            ...role,
-            state: false
-        }
+        let newRole = { ...role }
+        newRole._doc.state = false;
 
         const roleDelete = await RoleSchema.findByIdAndUpdate(rolId, newRole, { new: true },);
         const roleWithRef = await RoleSchema.findById(roleDelete.id)

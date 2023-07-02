@@ -17,6 +17,10 @@ const TypeUserSchema = Schema({
 TypeUserSchema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
+    if (object.userId) {
+        object.userId.id = object.userId._id
+        delete object.userId._id;
+    }
     return object;
 });
 

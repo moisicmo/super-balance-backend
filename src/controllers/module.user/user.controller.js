@@ -4,8 +4,13 @@ const { UserSchema } = require('./../../models');
 
 const getUsers = async (req, res = response) => {
     try {
-        const users = await UserSchema.find()
-            .populate('roleId', 'name')
+        const users = await UserSchema.find({ state: true })
+            .populate({
+                path: 'roleId',
+                populate: {
+                    path: 'permisionIds'
+                },
+            })
             .populate('typeUserId', 'name')
             .populate('responsibleId', 'name');
 
@@ -26,16 +31,21 @@ const createUser = async (req, res = response) => {
 
     const user = new UserSchema(req.body);
     try {
-        user.responsible = req.uid;
+        user.responsibleId = req.uid;
 
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
-        user.password = bcrypt.hashSync(user.email, salt);
+        user.password = bcrypt.hashSync(user.password, salt);
 
 
         const userSave = await user.save();
         const userWithRef = await UserSchema.findById(userSave.id)
-            .populate('roleId', 'name')
+            .populate({
+                path: 'roleId',
+                populate: {
+                    path: 'permisionIds'
+                },
+            })
             .populate('typeUserId', 'name')
             .populate('responsibleId', 'name');
 
@@ -65,7 +75,12 @@ const updateUser = async (req, res = response) => {
 
         const userUpdate = await UserSchema.findByIdAndUpdate(userId, newUser, { new: true },);
         const userWithRef = await UserSchema.findById(userUpdate.id)
-            .populate('roleId', 'name')
+            .populate({
+                path: 'roleId',
+                populate: {
+                    path: 'permisionIds'
+                },
+            })
             .populate('typeUserId', 'name')
             .populate('responsibleId', 'name');
 
@@ -90,14 +105,23 @@ const deleteUser = async (req, res = response) => {
 
     try {
         const user = await UserSchema.findById(userId)
-        const newUser = {
-            ...user,
-            state: false
+        if (user.isSuperUser) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No es posible eliminar a un super usuario'
+            });
         }
+        let newUser = { ...user }
+        newUser._doc.state = false;
 
         const userDelete = await UserSchema.findByIdAndUpdate(userId, newUser, { new: true },);
         const userWithRef = await UserSchema.findById(userDelete.id)
-            .populate('roleId', 'name')
+            .populate({
+                path: 'roleId',
+                populate: {
+                    path: 'permisionIds'
+                },
+            })
             .populate('typeUserId', 'name')
             .populate('responsibleId', 'name');
 

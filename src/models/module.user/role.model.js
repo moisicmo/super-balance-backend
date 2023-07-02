@@ -25,11 +25,17 @@ const RoleSchema = Schema({
 RoleSchema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
-    object.permisionIds.forEach(e => {
-        e.id = e._id;
-        delete e._id;
-        delete e.__v;
-    });
+    if (object.permisionIds) {
+        object.permisionIds.forEach(e => {
+            e.id = e._id;
+            delete e._id;
+            delete e.__v;
+        });
+    }
+    if (object.userId) {
+        object.userId.id = object.userId._id
+        delete object.userId._id;
+    }
     return object;
 });
 module.exports = model('Roles', RoleSchema);

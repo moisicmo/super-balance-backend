@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { TypeUserSchema, RoleSchema, PermisionSchema, UsuarioSchema, CategoriaSchema, } = require('../models');
+const { TypeUserSchema, RoleSchema, PermisionSchema, UserSchema, CategoriaSchema, } = require('../models');
 const ObjectId = mongoose.Types.ObjectId;
 
 const typeUserExists = async (name = "", data = "") => {
@@ -51,7 +51,7 @@ const emailExists = async (email = "", data = "") => {
   // Verificar si el tipo de usuario existe
   const objIdToExclude = new ObjectId(data.req.params.id);
 
-  let existRol = await UsuarioSchema.findOne({
+  let existRol = await UserSchema.findOne({
     email: email,
     _id: { $ne: objIdToExclude ?? null },
     state: true

@@ -4,7 +4,7 @@ const { TypeUserSchema } = require('./../../models');
 const getTypeUsers = async (req, res = response) => {
 
     try {
-        const typeUsers = await TypeUserSchema.find()
+        const typeUsers = await TypeUserSchema.find({ state: true })
             .populate('userId', 'name');
 
         res.json({
@@ -76,19 +76,15 @@ const updateTypeUser = async (req, res = response) => {
 const deleteTypeUser = async (req, res = response) => {
 
     const typeUserId = req.params.id;
-
     try {
         const typeUser = await TypeUserSchema.findById(typeUserId)
 
-        const newTypeUser = {
-            ...typeUser,
-            state: false
-        }
-
+        let newTypeUser = { ...typeUser }
+        newTypeUser._doc.state = false;
         const typeUserDelete = await TypeUserSchema.findByIdAndUpdate(typeUserId, newTypeUser, { new: true },);
 
         const typeUserWithRef = await TypeUserSchema.findById(typeUserDelete.id)
-            .populate('user', 'name');
+            .populate('userId', 'name');
         res.json({
             ok: true,
             typeUser: typeUserWithRef
