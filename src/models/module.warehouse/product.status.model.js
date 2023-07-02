@@ -24,9 +24,26 @@ const ProductStatusSchema = Schema({
         type: Boolean,
         default: true
     },
-});
+},
+    { timestamps: true });
 ProductStatusSchema.method('toJSON', function () {
-    const { __v, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    if (object.productId) {
+        object.productId.id = object.productId._id
+        delete object.productId._id;
+        delete object.productId.__v;
+    }
+    if (object.priceId) {
+        object.priceId.id = object.priceId._id
+        delete object.priceId._id;
+        delete object.priceId.__v;
+    }
+    if (object.userId) {
+        object.userId.id = object.userId._id
+        delete object.userId._id;
+        delete object.userId.__v;
+    }
     return object;
 });
 

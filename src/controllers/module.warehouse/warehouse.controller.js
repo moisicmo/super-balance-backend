@@ -4,7 +4,7 @@ const { WarehouseSchema } = require('../../models');
 const getWarehouses = async (req, res = response) => {
 
     try {
-        const warehouses = await WarehouseSchema.find()
+        const warehouses = await WarehouseSchema.find({ state: true })
             .populate('userId', 'name')
             .populate('userIds');
 
@@ -26,7 +26,7 @@ const createWarehouse = async (req, res = response) => {
     const warehouse = new WarehouseSchema(req.body);
 
     try {
-        warehouse.user = req.uid;
+        warehouse.userId = req.uid;
 
         const warehouseSave = await warehouse.save();
         const warehouseWithRef = await WarehouseSchema.findById(warehouseSave.id)
@@ -83,10 +83,8 @@ const deleteWarehouse = async (req, res = response) => {
     try {
         const warehouse = await WarehouseSchema.findById(warehouseId)
 
-        const newWarehouse = {
-            ...warehouse,
-            state: false
-        }
+        let newWarehouse = { ...warehouse }
+        newWarehouse._doc.state = false;
 
         const warehouseDelete = await WarehouseSchema.findByIdAndUpdate(warehouseId, newWarehouse, { new: true },);
 

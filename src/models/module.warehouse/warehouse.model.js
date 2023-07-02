@@ -29,9 +29,30 @@ const WarehouseSchema = Schema({
         type: Boolean,
         default: true
     },
-});
+},
+    { timestamps: true });
 WarehouseSchema.method('toJSON', function () {
-    const { __v, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    if (object.userId) {
+        object.userId.id = object.userId._id
+        delete object.userId._id;
+        delete object.userId.__v;
+    }
+    if (object.userIds) {
+        object.userIds.forEach(e => {
+            e.id = e._id;
+            delete e._id;
+            delete e.__v;
+            delete e.roleId;
+            delete e.typeUserId;
+            delete e.valid;
+            delete e.state;
+            delete e.isSuperUser;
+            delete e.password;
+            delete e.responsibleId;
+        });
+    }
     return object;
 });
 

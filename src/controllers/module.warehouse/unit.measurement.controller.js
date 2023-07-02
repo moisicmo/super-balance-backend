@@ -4,7 +4,7 @@ const { UnitMeasurementSchema } = require('../../models');
 const getMeasurementUnits = async (req, res = response) => {
 
     try {
-        const measurementUnits = await UnitMeasurementSchema.find()
+        const measurementUnits = await UnitMeasurementSchema.find({ state: true })
             .populate('userId', 'name');
 
         res.json({
@@ -25,7 +25,7 @@ const createunitMeasurement = async (req, res = response) => {
     const unitMeasurement = new UnitMeasurementSchema(req.body);
 
     try {
-        unitMeasurement.user = req.uid;
+        unitMeasurement.userId = req.uid;
 
         const unitMeasurementSave = await unitMeasurement.save();
         const unitMeasurementWithRef = await UnitMeasurementSchema.findById(unitMeasurementSave.id)
@@ -80,10 +80,8 @@ const deleteunitMeasurement = async (req, res = response) => {
     try {
         const unitMeasurement = await UnitMeasurementSchema.findById(unitMeasurementId)
 
-        const newCategory = {
-            ...unitMeasurement,
-            state: false
-        }
+        let newCategory = { ...unitMeasurement }
+        newCategory._doc.state = false;
 
         const unitMeasurementDelete = await UnitMeasurementSchema.findByIdAndUpdate(unitMeasurementId, newCategory, { new: true });
 

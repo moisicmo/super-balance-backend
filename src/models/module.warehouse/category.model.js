@@ -14,9 +14,16 @@ const CategorySchema = Schema({
         type: Boolean,
         default: true
     },
-});
+},
+    { timestamps: true });
 CategorySchema.method('toJSON', function () {
-    const { __v, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    if (object.userId) {
+        object.userId.id = object.userId._id
+        delete object.userId._id;
+        delete object.userId.__v;
+    }
     return object;
 });
 

@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { OutputSchema } = require('../../models');
+const { OutputSchema, KardexProductSchema } = require('../../models');
 
 const getOutputs = async (req, res = response) => {
 
@@ -7,7 +7,7 @@ const getOutputs = async (req, res = response) => {
         const outputs = await OutputSchema.find()
             .populate('productStatusId')
             .populate('userId', 'name')
-            .populate('Warehouses');
+            .populate('warehouseId');
 
         res.json({
             ok: true,
@@ -27,13 +27,40 @@ const createOutput = async (req, res = response) => {
     const output = new OutputSchema(req.body);
 
     try {
-        output.user = req.uid;
+        //obtener el ultimo registro en el kardex
+        const kardex = await KardexProductSchema.findOne({
+            productStatusId: output.productStatusId,
+            warehouseId: output.warehouseId,
+        })
+        if (!kardex) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Es imposible hacer el registro porque no existen ingresos de stock'
+            });
+        }
+        if (kardex.stock < output.quatity) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El stock es inferior a la cantidad que requiere disminuir'
+            });
+        }
+        output.userId = req.uid;
 
         const outputSave = await output.save();
+        //registro en el kardex
+        const newKardex = new KardexProductSchema({
+            productStatusId: output.productStatusId,
+            inputOrOutput: outputSave.id,
+            modelRef: 'Outputs',
+            warehouseId: output.warehouseId,
+            detail: req.body.detail,
+            stock: kardex.stock - output.quatity
+        });
+        await newKardex.save();
         const outputWithRef = await OutputSchema.findById(outputSave.id)
             .populate('productStatusId')
             .populate('userId', 'name')
-            .populate('Warehouses');
+            .populate('warehouseId');
 
         res.json({
             ok: true,

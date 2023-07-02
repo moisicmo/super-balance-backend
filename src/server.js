@@ -92,6 +92,8 @@ class Server {
         this.app.use(this.paths.product, require('./routes/module.warehouse/product.route'));
         this.app.use(this.paths.productStatus, require('./routes/module.warehouse/product.status.route'));
         this.app.use(this.paths.price, require('./routes/module.warehouse/price.route'));
+        this.app.use(this.paths.input, require('./routes/module.warehouse/input.route'));
+        this.app.use(this.paths.output, require('./routes/module.warehouse/output.route'));
         this.app.use(this.paths.kardexProduct, require('./routes/module.warehouse/kardex.product.route'));
         //module customers
         //module orders

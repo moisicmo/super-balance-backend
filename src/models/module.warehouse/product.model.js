@@ -40,9 +40,26 @@ const ProductSchema = Schema({
         type: Boolean,
         default: true
     },
-});
+},
+    { timestamps: true });
 ProductSchema.method('toJSON', function () {
-    const { __v, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    if (object.userId) {
+        object.userId.id = object.userId._id
+        delete object.userId._id;
+        delete object.userId.__v;
+    }
+    if (object.categoryId) {
+        object.categoryId.id = object.categoryId._id
+        delete object.categoryId._id;
+        delete object.categoryId.__v;
+    }
+    if (object.unitMeasurementId) {
+        object.unitMeasurementId.id = object.unitMeasurementId._id
+        delete object.unitMeasurementId._id;
+        delete object.unitMeasurementId.__v;
+    }
     return object;
 });
 

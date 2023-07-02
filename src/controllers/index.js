@@ -69,7 +69,7 @@ const {
 } = require('./module.warehouse/input.controller');
 const {
     getKardexProducts,
-    createKardexProduct,
+    getKardexProductsByProductId,
 } = require('./module.warehouse/kardex.product.controller')
 module.exports = {
     authUser,
@@ -118,5 +118,5 @@ module.exports = {
     getInputs,
     createInput,
     getKardexProducts,
-    createKardexProduct,
+    getKardexProductsByProductId,
 }

@@ -4,7 +4,7 @@ const { ProductStatusSchema } = require('../../models');
 const getProductStatus = async (req, res = response) => {
 
     try {
-        const productStatus = await ProductStatusSchema.find()
+        const productStatus = await ProductStatusSchema.find({ state: true })
             .populate('productId')
             .populate('priceId')
             .populate('userId', 'name')
@@ -27,7 +27,7 @@ const createProductStatus = async (req, res = response) => {
     const productStatus = new ProductStatusSchema(req.body);
 
     try {
-        productStatus.user = req.uid;
+        productStatus.userId = req.uid;
 
         const productStatusSave = await productStatus.save();
         const productStatusWithRef = await ProductStatusSchema.findById(productStatusSave.id)
@@ -86,10 +86,8 @@ const deleteProductStatus = async (req, res = response) => {
     try {
         const productStatus = await ProductStatusSchema.findById(productStatusId)
 
-        const newProductStatus = {
-            ...productStatus,
-            state: false
-        }
+        let newProductStatus = { ...productStatus }
+        newProductStatus._doc.state = false;
 
         const productStatusDelete = await ProductStatusSchema.findByIdAndUpdate(productStatusId, newProductStatus, { new: true });
 

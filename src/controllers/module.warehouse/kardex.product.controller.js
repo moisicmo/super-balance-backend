@@ -6,10 +6,7 @@ const getKardexProducts = async (req, res = response) => {
     try {
         const kardexProducts = await KardexProductSchema.find()
             .populate('productStatusId')
-            .populate({
-                path: 'inputOrOutput',
-                populate: { path: 'Inputs Outputs' }
-            })
+            .populate('inputOrOutput')
             .populate('warehouseId');
 
         res.json({
@@ -25,26 +22,18 @@ const getKardexProducts = async (req, res = response) => {
         });
     }
 }
-const createKardexProduct = async (req, res = response) => {
-
-    const kardexProduct = new KardexProductSchema(req.body);
-
+const getKardexProductsByProductId = async (req, res = response) => {
+    const productStatusId = req.params.id;
     try {
-        kardexProduct.user = req.uid;
-
-        const kardexProductSave = await kardexProduct.save();
-        const kardexProductWithRef = await KardexProductSchema.findById(kardexProductSave.id)
+        const kardexProducts = await KardexProductSchema.find({ productStatusId })
             .populate('productStatusId')
-            .populate({
-                path: 'inputOrOutput',
-                populate: { path: 'Inputs Outputs' }
-            })
+            .populate('inputOrOutput')
             .populate('warehouseId');
 
         res.json({
             ok: true,
-            kardexProduct: kardexProductWithRef
-        })
+            kardexProducts
+        });
 
     } catch (error) {
         console.log(error)
@@ -56,5 +45,5 @@ const createKardexProduct = async (req, res = response) => {
 }
 module.exports = {
     getKardexProducts,
-    createKardexProduct,
+    getKardexProductsByProductId
 }

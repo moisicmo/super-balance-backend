@@ -44,7 +44,8 @@ const UserSchema = Schema({
         type: Boolean,
         default: false
     }
-});
+},
+    { timestamps: true });
 
 UserSchema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();

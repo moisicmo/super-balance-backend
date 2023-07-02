@@ -4,7 +4,7 @@ const { CategorySchema } = require('../../models');
 const getCategories = async (req, res = response) => {
 
     try {
-        const categories = await CategorySchema.find()
+        const categories = await CategorySchema.find({ state: true })
             .populate('userId', 'name');
 
         res.json({
@@ -25,7 +25,7 @@ const createCategory = async (req, res = response) => {
     const category = new CategorySchema(req.body);
 
     try {
-        category.user = req.uid;
+        category.userId = req.uid;
 
         const categorySave = await category.save();
         const categoryWithRef = await CategorySchema.findById(categorySave.id)
@@ -80,10 +80,8 @@ const deleteCategory = async (req, res = response) => {
     try {
         const category = await CategorySchema.findById(categoryId)
 
-        const newCategory = {
-            ...category,
-            state: false
-        }
+        let newCategory = { ...category }
+        newCategory._doc.state = false;
 
         const categoryDelete = await CategorySchema.findByIdAndUpdate(categoryId, newCategory, { new: true });
 

@@ -34,9 +34,26 @@ const OutputSchema = Schema({
     },
 });
 OutputSchema.method('toJSON', function () {
-    const { __v, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    if (object.productStatusId) {
+        object.productStatusId.id = object.productStatusId._id
+        delete object.productStatusId._id;
+        delete object.productStatusId.__v;
+    }
+    if (object.userId) {
+        object.userId.id = object.userId._id
+        delete object.userId._id;
+        delete object.userId.__v;
+    }
+    if (object.warehouseId) {
+        object.warehouseId.id = object.warehouseId._id
+        delete object.warehouseId._id;
+        delete object.warehouseId.__v;
+    }
     return object;
-});
+},
+    { timestamps: true });
 
 
 module.exports = model('Outputs', OutputSchema);

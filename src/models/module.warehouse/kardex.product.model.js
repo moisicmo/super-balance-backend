@@ -29,9 +29,26 @@ const KardexProductSchema = Schema({
         type: Number,
         default: 0
     },
-});
+},
+    { timestamps: true });
 KardexProductSchema.method('toJSON', function () {
-    const { __v, ...object } = this.toObject();
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    if (object.productStatusId) {
+        object.productStatusId.id = object.productStatusId._id
+        delete object.productStatusId._id;
+        delete object.productStatusId.__v;
+    }
+    if (object.warehouseId) {
+        object.warehouseId.id = object.warehouseId._id
+        delete object.warehouseId._id;
+        delete object.warehouseId.__v;
+    }
+    if (object.inputOrOutput) {
+        object.inputOrOutput.id = object.inputOrOutput._id
+        delete object.inputOrOutput._id;
+        delete object.inputOrOutput.__v;
+    }
     return object;
 });
 

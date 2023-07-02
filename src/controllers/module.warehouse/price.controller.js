@@ -4,12 +4,12 @@ const { PriceSchema } = require('../../models');
 const getPrices = async (req, res = response) => {
 
     try {
-        const prices = await PriceSchema.find()
+        const prices = await PriceSchema.find({ state: true })
             .populate('userId', 'name');
 
         res.json({
             ok: true,
-            cateogories: prices
+            prices
         });
 
     } catch (error) {
@@ -25,7 +25,7 @@ const createPrice = async (req, res = response) => {
     const price = new PriceSchema(req.body);
 
     try {
-        price.user = req.uid;
+        price.userId = req.uid;
 
         const priceSave = await price.save();
         const priceWithRef = await PriceSchema.findById(priceSave.id)
@@ -80,12 +80,10 @@ const deletePrice = async (req, res = response) => {
     try {
         const price = await PriceSchema.findById(priceId)
 
-        const newCategory = {
-            ...price,
-            state: false
-        }
+        let newPrice = { ...price }
+        newPrice._doc.state = false;
 
-        const priceDelete = await PriceSchema.findByIdAndUpdate(priceId, newCategory, { new: true });
+        const priceDelete = await PriceSchema.findByIdAndUpdate(priceId, newPrice, { new: true });
 
         const priceWithRef = await PriceSchema.findById(priceDelete.id)
             .populate('userId', 'name');

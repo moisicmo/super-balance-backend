@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 
+
 const TypeUserSchema = Schema({
     name: {
         type: String,
@@ -13,7 +14,11 @@ const TypeUserSchema = Schema({
         type: Boolean,
         default: true
     },
-});
+},
+    { timestamps: true }
+);
+
+
 TypeUserSchema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;

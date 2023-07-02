@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { InputSchema } = require('../../models');
+const { InputSchema, KardexProductSchema } = require('../../models');
 
 const getInputs = async (req, res = response) => {
 
@@ -7,7 +7,7 @@ const getInputs = async (req, res = response) => {
         const inputs = await InputSchema.find()
             .populate('productStatusId')
             .populate('userId', 'name')
-            .populate('Warehouses');
+            .populate('warehouseId');
 
         res.json({
             ok: true,
@@ -27,13 +27,27 @@ const createInput = async (req, res = response) => {
     const input = new InputSchema(req.body);
 
     try {
-        input.user = req.uid;
+        input.userId = req.uid;
 
         const inputSave = await input.save();
+        //registro en el kardex
+        const kardex = await KardexProductSchema.findOne({
+            productStatusId: input.productStatusId,
+            warehouseId: input.warehouseId,
+        })
+        const newKardex = new KardexProductSchema({
+            productStatusId: input.productStatusId,
+            inputOrOutput: inputSave.id,
+            modelRef: 'Inputs',
+            warehouseId: input.warehouseId,
+            detail: req.body.detail,
+            stock: kardex ? (kardex.stock + input.quatity) : input.quatity
+        });
+        await newKardex.save();
         const inputWithRef = await InputSchema.findById(inputSave.id)
             .populate('productStatusId')
             .populate('userId', 'name')
-            .populate('Warehouses');
+            .populate('warehouseId');
 
         res.json({
             ok: true,

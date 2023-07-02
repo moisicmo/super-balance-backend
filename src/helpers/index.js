@@ -4,6 +4,12 @@ const {
     typeUserExists,
     roleExists,
     permisionExists,
+    categoryExists,
+    warehouseExists,
+    unitMEasurementExists,
+    productExists,
+    priceExists,
+    productStatusExists,
 } = require('./db-validators');
 
 const {
@@ -14,5 +20,11 @@ module.exports = {
     typeUserExists,
     roleExists,
     permisionExists,
-    generarJWT
+    categoryExists,
+    warehouseExists,
+    unitMEasurementExists,
+    productExists,
+    generarJWT,
+    priceExists,
+    productStatusExists,
 }
