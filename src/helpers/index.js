@@ -8,7 +8,6 @@ const {
     warehouseExists,
     unitMEasurementExists,
     productExists,
-    priceExists,
     productStatusExists,
 } = require('./db-validators');
 
@@ -25,6 +24,5 @@ module.exports = {
     unitMEasurementExists,
     productExists,
     generarJWT,
-    priceExists,
     productStatusExists,
 }

@@ -34,11 +34,6 @@ const KardexProductSchema = Schema({
 KardexProductSchema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
-    if (object.productStatusId) {
-        object.productStatusId.id = object.productStatusId._id
-        delete object.productStatusId._id;
-        delete object.productStatusId.__v;
-    }
     if (object.warehouseId) {
         object.warehouseId.id = object.warehouseId._id
         delete object.warehouseId._id;
@@ -48,6 +43,26 @@ KardexProductSchema.method('toJSON', function () {
         object.inputOrOutput.id = object.inputOrOutput._id
         delete object.inputOrOutput._id;
         delete object.inputOrOutput.__v;
+        if (object.inputOrOutput.productStatusId) {
+            object.inputOrOutput.productStatusId.id = object.inputOrOutput.productStatusId._id
+            delete object.inputOrOutput.productStatusId._id;
+            delete object.inputOrOutput.productStatusId.__v;
+            if (object.inputOrOutput.productStatusId.productId) {
+                object.inputOrOutput.productStatusId.productId.id = object.inputOrOutput.productStatusId.productId._id
+                delete object.inputOrOutput.productStatusId.productId._id;
+                delete object.inputOrOutput.productStatusId.productId.__v;
+                if (object.inputOrOutput.productStatusId.productId.categoryId) {
+                    object.inputOrOutput.productStatusId.productId.categoryId.id = object.inputOrOutput.productStatusId.productId.categoryId._id
+                    delete object.inputOrOutput.productStatusId.productId.categoryId._id;
+                    delete object.inputOrOutput.productStatusId.productId.categoryId.__v;
+                }
+                if (object.inputOrOutput.productStatusId.productId.unitMeasurementId) {
+                    object.inputOrOutput.productStatusId.productId.unitMeasurementId.id = object.inputOrOutput.productStatusId.productId.unitMeasurementId._id
+                    delete object.inputOrOutput.productStatusId.productId.unitMeasurementId._id;
+                    delete object.inputOrOutput.productStatusId.productId.unitMeasurementId.__v;
+                }
+            }
+        }
     }
     return object;
 });

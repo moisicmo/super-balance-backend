@@ -35,7 +35,6 @@ const createCategory = async (req, res = response) => {
             ok: true,
             category: categoryWithRef
         })
-
     } catch (error) {
         console.log(error)
         res.status(500).json({

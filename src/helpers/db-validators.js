@@ -9,7 +9,6 @@ const {
   UnitMeasurementSchema,
   CategorySchema,
   ProductSchema,
-  PriceSchema,
   ProductStatusSchema,
 } = require('../models');
 const ObjectId = mongoose.Types.ObjectId;
@@ -128,20 +127,6 @@ const productExists = async (name = "", data = "") => {
     throw new Error(`El titulo: ${name}, ya está registrado`);
   }
 };
-const priceExists = async (name = "", data = "") => {
-  // Verificar si la sucursal existe
-  const objIdToExclude = new ObjectId(data.req.params.id);
-
-  let existPrice = await PriceSchema.findOne({
-    name: name,
-    _id: { $ne: objIdToExclude ?? null },
-    state: true
-  });
-
-  if (existPrice) {
-    throw new Error(`El titulo: ${name}, ya está registrado`);
-  }
-};
 const productStatusExists = async (name = "", data = "") => {
   // Verificar si la sucursal existe
   const objIdToExclude = new ObjectId(data.req.params.id);
@@ -165,6 +150,5 @@ module.exports = {
   warehouseExists,
   unitMEasurementExists,
   productExists,
-  priceExists,
   productStatusExists,
 };

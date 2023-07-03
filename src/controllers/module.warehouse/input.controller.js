@@ -5,7 +5,16 @@ const getInputs = async (req, res = response) => {
 
     try {
         const inputs = await InputSchema.find()
-            .populate('productStatusId')
+            .populate({
+                path: 'productStatusId',
+                populate: {
+                    path: 'productId',
+                    populate: [
+                        { path: 'categoryId' },
+                        { path: 'unitMeasurementId' }
+                    ]
+                },
+            })
             .populate('userId', 'name')
             .populate('warehouseId');
 
@@ -30,11 +39,11 @@ const createInput = async (req, res = response) => {
         input.userId = req.uid;
 
         const inputSave = await input.save();
-        //registro en el kardex
+        //ultimo registro en el kardex
         const kardex = await KardexProductSchema.findOne({
             productStatusId: input.productStatusId,
             warehouseId: input.warehouseId,
-        })
+        }).sort({ createdAt: -1 });
         const newKardex = new KardexProductSchema({
             productStatusId: input.productStatusId,
             inputOrOutput: inputSave.id,
@@ -45,7 +54,16 @@ const createInput = async (req, res = response) => {
         });
         await newKardex.save();
         const inputWithRef = await InputSchema.findById(inputSave.id)
-            .populate('productStatusId')
+            .populate({
+                path: 'productStatusId',
+                populate: {
+                    path: 'productId',
+                    populate: [
+                        { path: 'categoryId' },
+                        { path: 'unitMeasurementId' }
+                    ]
+                },
+            })
             .populate('userId', 'name')
             .populate('warehouseId');
 

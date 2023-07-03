@@ -5,8 +5,19 @@ const getKardexProducts = async (req, res = response) => {
 
     try {
         const kardexProducts = await KardexProductSchema.find()
-            .populate('productStatusId')
-            .populate('inputOrOutput')
+            .populate({
+                path: 'inputOrOutput',
+                populate: {
+                    path: 'productStatusId',
+                    populate: {
+                        path: 'productId',
+                        populate: [
+                            { path: 'categoryId' },
+                            { path: 'unitMeasurementId' }
+                        ]
+                    },
+                }
+            })
             .populate('warehouseId');
 
         res.json({
@@ -26,8 +37,19 @@ const getKardexProductsByProductId = async (req, res = response) => {
     const productStatusId = req.params.id;
     try {
         const kardexProducts = await KardexProductSchema.find({ productStatusId })
-            .populate('productStatusId')
-            .populate('inputOrOutput')
+            .populate({
+                path: 'inputOrOutput',
+                populate: {
+                    path: 'productStatusId',
+                    populate: {
+                        path: 'productId',
+                        populate: [
+                            { path: 'categoryId' },
+                            { path: 'unitMeasurementId' }
+                        ]
+                    },
+                }
+            })
             .populate('warehouseId');
 
         res.json({

@@ -6,7 +6,13 @@ const getProductStatus = async (req, res = response) => {
     try {
         const productStatus = await ProductStatusSchema.find({ state: true })
             .populate('productId')
-            .populate('priceId')
+            .populate({
+                path: 'productId',
+                populate: [
+                    { path: 'categoryId' },
+                    { path: 'unitMeasurementId' }
+                ]
+            })
             .populate('userId', 'name')
 
         res.json({
@@ -32,7 +38,13 @@ const createProductStatus = async (req, res = response) => {
         const productStatusSave = await productStatus.save();
         const productStatusWithRef = await ProductStatusSchema.findById(productStatusSave.id)
             .populate('productId')
-            .populate('priceId')
+            .populate({
+                path: 'productId',
+                populate: [
+                    { path: 'categoryId' },
+                    { path: 'unitMeasurementId' }
+                ]
+            })
             .populate('userId', 'name')
 
         res.json({
@@ -62,7 +74,13 @@ const updateProductStatus = async (req, res = response) => {
 
         const productStatusWithRef = await ProductStatusSchema.findById(productStatusUpdate.id)
             .populate('productId')
-            .populate('priceId')
+            .populate({
+                path: 'productId',
+                populate: [
+                    { path: 'categoryId' },
+                    { path: 'unitMeasurementId' }
+                ]
+            })
             .populate('userId', 'name')
         res.json({
             ok: true,
@@ -93,7 +111,13 @@ const deleteProductStatus = async (req, res = response) => {
 
         const productStatusWithRef = await ProductStatusSchema.findById(productStatusDelete.id)
             .populate('productId')
-            .populate('priceId')
+            .populate({
+                path: 'productId',
+                populate: [
+                    { path: 'categoryId' },
+                    { path: 'unitMeasurementId' }
+                ]
+            })
             .populate('userId', 'name')
         res.json({
             ok: true,

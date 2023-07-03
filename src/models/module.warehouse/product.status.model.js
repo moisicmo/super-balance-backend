@@ -6,11 +6,6 @@ const ProductStatusSchema = Schema({
         ref: 'Products',
         required: true
     },
-    priceId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Prices',
-        required: true
-    },
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'Users',
@@ -19,6 +14,18 @@ const ProductStatusSchema = Schema({
     name: {
         type: String,
         required: [true, 'El nombre es obligatorio']
+    },
+    price: {
+        type: Number,
+        required: [true, 'El precio es obligatorio']
+    },
+    discount: {
+        type: Number,
+        default: 0.00
+    },
+    typeDiscount: {
+        type: String,
+        default: 'amount'
     },
     state: {
         type: Boolean,
@@ -33,11 +40,16 @@ ProductStatusSchema.method('toJSON', function () {
         object.productId.id = object.productId._id
         delete object.productId._id;
         delete object.productId.__v;
-    }
-    if (object.priceId) {
-        object.priceId.id = object.priceId._id
-        delete object.priceId._id;
-        delete object.priceId.__v;
+        if (object.productId.categoryId) {
+            object.productId.categoryId.id = object.productId.categoryId._id
+            delete object.productId.categoryId._id;
+            delete object.productId.categoryId.__v;
+        }
+        if (object.productId.unitMeasurementId) {
+            object.productId.unitMeasurementId.id = object.productId.unitMeasurementId._id
+            delete object.productId.unitMeasurementId._id;
+            delete object.productId.unitMeasurementId.__v;
+        }
     }
     if (object.userId) {
         object.userId.id = object.userId._id

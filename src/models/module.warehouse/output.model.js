@@ -40,6 +40,21 @@ OutputSchema.method('toJSON', function () {
         object.productStatusId.id = object.productStatusId._id
         delete object.productStatusId._id;
         delete object.productStatusId.__v;
+        if (object.productStatusId.productId) {
+            object.productStatusId.productId.id = object.productStatusId.productId._id
+            delete object.productStatusId.productId._id;
+            delete object.productStatusId.productId.__v;
+            if (object.productStatusId.productId.categoryId) {
+                object.productStatusId.productId.categoryId.id = object.productStatusId.productId.categoryId._id
+                delete object.productStatusId.productId.categoryId._id;
+                delete object.productStatusId.productId.categoryId.__v;
+            }
+            if (object.productStatusId.productId.unitMeasurementId) {
+                object.productStatusId.productId.unitMeasurementId.id = object.productStatusId.productId.unitMeasurementId._id
+                delete object.productStatusId.productId.unitMeasurementId._id;
+                delete object.productStatusId.productId.unitMeasurementId.__v;
+            }
+        }
     }
     if (object.userId) {
         object.userId.id = object.userId._id

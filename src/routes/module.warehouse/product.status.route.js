@@ -19,9 +19,9 @@ router.post(
     '/',
     [
         check('productId', 'El nombre es obligatorio').not().isEmpty(),
-        check('priceId', 'El nombre es obligatorio').not().isEmpty(),
         check('name', 'El nombre es obligatorio').not().isEmpty(),
-        check("name").custom(productStatusExists),
+        check('price', 'El precio es obligatorio').not().isEmpty(),
+        check('name').custom(productStatusExists),
         validarCampos
     ],
     createProductStatus
@@ -30,9 +30,9 @@ router.put(
     '/:id',
     [
         check('productId', 'El nombre es obligatorio').not().isEmpty(),
-        check('priceId', 'El nombre es obligatorio').not().isEmpty(),
         check('name', 'El nombre es obligatorio').not().isEmpty(),
-        check("name").custom(productStatusExists),
+        check('price', 'El precio es obligatorio').not().isEmpty(),
+        check('name').custom(productStatusExists),
         validarCampos
     ],
     updateProductStatus

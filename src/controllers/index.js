@@ -54,12 +54,6 @@ const {
     deleteProductStatus,
 } = require('./module.warehouse/product.status.controller');
 const {
-    getPrices,
-    createPrice,
-    updatePrice,
-    deletePrice,
-} = require('./module.warehouse/price.controller');
-const {
     getOutputs,
     createOutput,
 } = require('./module.warehouse/output.controller');
@@ -109,10 +103,6 @@ module.exports = {
     createProductStatus,
     updateProductStatus,
     deleteProductStatus,
-    getPrices,
-    createPrice,
-    updatePrice,
-    deletePrice,
     getOutputs,
     createOutput,
     getInputs,
