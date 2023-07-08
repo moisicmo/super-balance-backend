@@ -13,8 +13,12 @@ const {
 
 const {
     generarJWT
-} = require('./jwt')
+} = require('./jwt');
+
+const { transformUserWarehouses, transformProductStatus } = require('./transform');
 module.exports = {
+    transformUserWarehouses,
+    transformProductStatus,
     emailExists,
     typeUserExists,
     roleExists,

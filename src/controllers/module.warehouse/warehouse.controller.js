@@ -81,21 +81,10 @@ const deleteWarehouse = async (req, res = response) => {
     const warehouseId = req.params.id;
 
     try {
-        const warehouse = await WarehouseSchema.findById(warehouseId)
-
-        let newWarehouse = { ...warehouse }
-        newWarehouse._doc.state = false;
-
-        const warehouseDelete = await WarehouseSchema.findByIdAndUpdate(warehouseId, newWarehouse, { new: true },);
-
-        const warehouseWithRef = await WarehouseSchema.findById(warehouseDelete.id)
-            .populate('userId', 'name')
-            .populate('userIds');
+        await WarehouseSchema.findByIdAndDelete(warehouseId);
         res.json({
             ok: true,
-            warehouse: warehouseWithRef
         });
-
 
     } catch (error) {
         console.log(error);

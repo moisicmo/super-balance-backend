@@ -29,7 +29,7 @@ const typeUserExists = async (name = "", data = "") => {
 };
 
 const roleExists = async (name = "", data = "") => {
-  // Verificar si el tipo de usuario existe
+  // Verificar si el rol existe
   const objIdToExclude = new ObjectId(data.req.params.id);
 
   let existRol = await RoleSchema.findOne({
@@ -44,7 +44,7 @@ const roleExists = async (name = "", data = "") => {
 };
 
 const permisionExists = async (name = "", data = "") => {
-  // Verificar si el tipo de usuario existe
+  // Verificar si el permiso existe
   const objIdToExclude = new ObjectId(data.req.params.id);
 
   let existRol = await PermisionSchema.findOne({
@@ -68,7 +68,7 @@ const emailExists = async (email = "", data = "") => {
   });
 
   if (existRol) {
-    throw new Error(`El nombre: ${email}, ya está registrado`);
+    throw new Error(`El correo: ${email}, ya está registrado`);
   }
 };
 const categoryExists = async (name = "", data = "") => {
@@ -128,10 +128,12 @@ const productExists = async (name = "", data = "") => {
   }
 };
 const productStatusExists = async (name = "", data = "") => {
-  // Verificar si la sucursal existe
+  // Verificar si la el estado respectivo al producto existe
+
   const objIdToExclude = new ObjectId(data.req.params.id);
 
   let existProductStatus = await ProductStatusSchema.findOne({
+    productId: data.req.body.productId,
     name: name,
     _id: { $ne: objIdToExclude ?? null },
     state: true

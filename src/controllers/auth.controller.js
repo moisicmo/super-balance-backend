@@ -1,7 +1,7 @@
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
-const { UserSchema } = require('./../models');
-const { generarJWT } = require('./../helpers');
+const { UserSchema, WarehouseSchema } = require('./../models');
+const { generarJWT, transformUserWarehouses } = require('./../helpers');
 
 
 const authUser = async (req, res = response) => {
@@ -17,8 +17,8 @@ const authUser = async (req, res = response) => {
                 },
             })
             .populate('typeUserId', 'name')
-            .populate('responsibleId', 'name');
-
+            .populate('responsibleId', 'name')
+            .lean();
         if (!user) {
             return res.status(400).json({
                 errors: [{ msg: "Lo lamento no pudimos encontrarte" }]
@@ -27,8 +27,15 @@ const authUser = async (req, res = response) => {
         if (!user.state) {
             throw new Error("No tienes permitido el acceso");
         }
+        const warehouses = await WarehouseSchema.find({ userIds: { $in: [user._id] }, state: true })
+            .populate('userId', 'name')
+            .populate('userIds');
 
-        const validPassword = bcrypt.compareSync(password, user.password);
+        user.warehouses = warehouses;
+
+        const populatedUser = transformUserWarehouses(user);
+
+        const validPassword = bcrypt.compareSync(password, populatedUser.password);
 
         if (!validPassword) {
             return res.status(400).json({
@@ -37,12 +44,12 @@ const authUser = async (req, res = response) => {
         }
 
 
-        const token = await generarJWT(user.id, user.name);
-        user.password = undefined;
+        const token = await generarJWT(populatedUser.id, populatedUser.name);
+        populatedUser.password = undefined;
         res.json({
             ok: true,
             token,
-            user
+            user: populatedUser
         })
     } catch (error) {
         console.log(error);

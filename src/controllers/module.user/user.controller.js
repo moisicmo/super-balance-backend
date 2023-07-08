@@ -1,10 +1,13 @@
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
-const { UserSchema } = require('./../../models');
+const { UserSchema, WarehouseSchema } = require('./../../models');
+
+const { transformUserWarehouses } = require('./../../helpers');
 
 const getUsers = async (req, res = response) => {
     try {
-        const users = await UserSchema.find({ state: true })
+        const users = await UserSchema.find()
+            .select('-password')
             .populate({
                 path: 'roleId',
                 populate: {
@@ -12,11 +15,19 @@ const getUsers = async (req, res = response) => {
                 },
             })
             .populate('typeUserId', 'name')
-            .populate('responsibleId', 'name');
-
+            .populate('responsibleId', 'name').lean();
+        const populatedUsers = await Promise.all(
+            users.map(async (user) => {
+                const warehouses = await WarehouseSchema.find({ userIds: { $in: [user._id] }, state: true })
+                    .populate('userId', 'name')
+                    .populate('userIds');
+                user.warehouses = warehouses
+                return transformUserWarehouses(user);
+            })
+        );
         res.json({
             ok: true,
-            users
+            users: populatedUsers
         });
     } catch (error) {
         console.log(error)
@@ -35,11 +46,17 @@ const createUser = async (req, res = response) => {
 
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
-        user.password = bcrypt.hashSync(user.password, salt);
-
-
+        user.password = bcrypt.hashSync(user.email, salt);
         const userSave = await user.save();
+        //agregar a warehouse
+        req.body.warehouses.map(async (warehouseId) => {
+            const warehouse = await WarehouseSchema.findById(warehouseId)
+            let newWarehouse = { ...warehouse }
+            newWarehouse._doc.userIds = [...newWarehouse._doc.userIds, userSave.id];
+            await WarehouseSchema.findByIdAndUpdate(warehouseId, newWarehouse, { new: true },);
+        })
         const userWithRef = await UserSchema.findById(userSave.id)
+            .select('-password')
             .populate({
                 path: 'roleId',
                 populate: {
@@ -47,11 +64,20 @@ const createUser = async (req, res = response) => {
                 },
             })
             .populate('typeUserId', 'name')
-            .populate('responsibleId', 'name');
+            .populate('responsibleId', 'name')
+            .lean();
+
+        const warehouses = await WarehouseSchema.find({ userIds: { $in: [userWithRef._id] }, state: true })
+            .populate('userId', 'name')
+            .populate('userIds');
+
+        userWithRef.warehouses = warehouses;
+
+        const populatedUser = transformUserWarehouses(userWithRef);
 
         res.json({
             ok: true,
-            user: userWithRef
+            user: populatedUser
         })
 
     } catch (error) {
@@ -64,70 +90,78 @@ const createUser = async (req, res = response) => {
 }
 
 const updateUser = async (req, res = response) => {
-
     const userId = req.params.id;
 
     try {
-
         const newUser = {
-            ...req.body
+            ...req.body,
+        };
+        const userUpdate = await UserSchema.findByIdAndUpdate(
+            userId,
+            newUser,
+            { new: true }
+        );
+        if (req.body.warehouses) {
+            const warehouseIds = req.body.warehouses;
+
+            // Actualizar todos los almacenes en una sola consulta
+            await WarehouseSchema.updateMany(
+                { userIds: { $in: [userId] } },
+                { $pull: { userIds: userId } }
+            );
+
+            await WarehouseSchema.updateMany(
+                { _id: { $in: warehouseIds } },
+                { $push: { userIds: userId } }
+            );
+
         }
 
-        const userUpdate = await UserSchema.findByIdAndUpdate(userId, newUser, { new: true },);
+
         const userWithRef = await UserSchema.findById(userUpdate.id)
+            .select("-password")
             .populate({
-                path: 'roleId',
+                path: "roleId",
                 populate: {
-                    path: 'permisionIds'
+                    path: "permisionIds",
                 },
             })
-            .populate('typeUserId', 'name')
-            .populate('responsibleId', 'name');
+            .populate("typeUserId", "name")
+            .populate("responsibleId", "name")
+            .lean();
+
+        const warehouses = await WarehouseSchema.find({
+            userIds: { $in: [userWithRef._id] },
+            state: true,
+        })
+            .populate("userId", "name")
+            .populate("userIds");
+
+        userWithRef.warehouses = warehouses;
+
+        const populatedUser = transformUserWarehouses(userWithRef);
 
         res.json({
             ok: true,
-            user: userWithRef
+            user: populatedUser,
         });
-
-
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Hable con el administrador'
+            msg: "Hable con el administrador",
         });
     }
+};
 
-}
 const deleteUser = async (req, res = response) => {
 
     const userId = req.params.id;
 
     try {
-        const user = await UserSchema.findById(userId)
-        if (user.isSuperUser) {
-            return res.status(400).json({
-                ok: false,
-                msg: 'No es posible eliminar a un super usuario'
-            });
-        }
-        let newUser = { ...user }
-        newUser._doc.state = false;
-
-        const userDelete = await UserSchema.findByIdAndUpdate(userId, newUser, { new: true },);
-        const userWithRef = await UserSchema.findById(userDelete.id)
-            .populate({
-                path: 'roleId',
-                populate: {
-                    path: 'permisionIds'
-                },
-            })
-            .populate('typeUserId', 'name')
-            .populate('responsibleId', 'name');
-
+        await UserSchema.findByIdAndDelete(userId);
         res.json({
             ok: true,
-            user: userWithRef
         });
 
 

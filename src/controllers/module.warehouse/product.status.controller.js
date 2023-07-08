@@ -1,5 +1,7 @@
 const { response } = require('express');
-const { ProductStatusSchema } = require('../../models');
+const { ProductStatusSchema, ProductSchema } = require('../../models');
+
+const { transformProductStatus } = require('./../../helpers');
 
 const getProductStatus = async (req, res = response) => {
 
@@ -30,27 +32,23 @@ const getProductStatus = async (req, res = response) => {
 }
 const createProductStatus = async (req, res = response) => {
 
-    const productStatus = new ProductStatusSchema(req.body);
+    const newProductStatus = new ProductStatusSchema(req.body);
 
     try {
-        productStatus.userId = req.uid;
-
-        const productStatusSave = await productStatus.save();
-        const productStatusWithRef = await ProductStatusSchema.findById(productStatusSave.id)
-            .populate('productId')
-            .populate({
-                path: 'productId',
-                populate: [
-                    { path: 'categoryId' },
-                    { path: 'unitMeasurementId' }
-                ]
-            })
+        newProductStatus.userId = req.uid;
+        const productStatusSave = await newProductStatus.save();
+        const productWithRef = await ProductSchema.findById(productStatusSave.productId)
             .populate('userId', 'name')
-
+            .populate('categoryId', 'name')
+            .populate('unitMeasurementId', 'name').lean();
+        const productStatus = await ProductStatusSchema.find({ productId: productWithRef._id, state: true })
+            .populate('userId', 'name');
+        productWithRef.productStatus = productStatus
+        const populatedUser = transformProductStatus(productWithRef);
         res.json({
             ok: true,
-            productStatus: productStatusWithRef
-        })
+            product: populatedUser
+        });
 
     } catch (error) {
         console.log(error)

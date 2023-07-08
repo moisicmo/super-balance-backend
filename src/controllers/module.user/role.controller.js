@@ -78,20 +78,11 @@ const deleteRol = async (req, res = response) => {
     const rolId = req.params.id;
 
     try {
-        const role = await RoleSchema.findById(rolId)
-
-        let newRole = { ...role }
-        newRole._doc.state = false;
-
-        const roleDelete = await RoleSchema.findByIdAndUpdate(rolId, newRole, { new: true },);
-        const roleWithRef = await RoleSchema.findById(roleDelete.id)
-            .populate('permisionIds')
-            .populate('userId', 'name');
-
+        await RoleSchema.findByIdAndDelete(rolId);
         res.json({
             ok: true,
-            role: roleWithRef
         });
+
 
 
     } catch (error) {

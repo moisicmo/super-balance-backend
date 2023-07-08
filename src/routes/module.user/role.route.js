@@ -24,11 +24,14 @@ router.post(
     createRol
 );
 //Editar rol
-router.put('/:id', [
-    check('name', 'El nombre es obligatorio').not().isEmpty(),
-    check("name").custom(roleExists),
-    validarCampos
-], updateRol)
+router.put(
+    '/:id',
+    [
+        check('name', 'El nombre es obligatorio').not().isEmpty(),
+        check("name").custom(roleExists),
+        validarCampos
+    ],
+    updateRol)
 //Eliminar rol
 router.delete('/:id', deleteRol)
 

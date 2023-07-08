@@ -4,7 +4,7 @@ const { PermisionSchema } = require('./../../models');
 const getPermisions = async (req, res = response) => {
 
     try {
-        const permissions = await PermisionSchema.find({ state: true });
+        const permissions = await PermisionSchema.find();
         res.json({
             ok: true,
             permissions
