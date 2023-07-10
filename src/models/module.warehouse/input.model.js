@@ -26,7 +26,7 @@ const InputSchema = Schema({
     },
     dueDate: {
         type: Date,
-        default: Date.now
+        default: null
     },
 },
     { timestamps: true });

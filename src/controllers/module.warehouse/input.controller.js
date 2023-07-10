@@ -52,24 +52,26 @@ const createInput = async (req, res = response) => {
             detail: req.body.detail,
             stock: kardex ? (kardex.stock + input.quatity) : input.quatity
         });
-        await newKardex.save();
-        const inputWithRef = await InputSchema.findById(inputSave.id)
+        const kardexSave = await newKardex.save();
+        const kardexProduct = await KardexProductSchema.findById(kardexSave)
             .populate({
-                path: 'productStatusId',
+                path: 'inputOrOutput',
                 populate: {
-                    path: 'productId',
-                    populate: [
-                        { path: 'categoryId' },
-                        { path: 'unitMeasurementId' }
-                    ]
-                },
+                    path: 'productStatusId',
+                    populate: {
+                        path: 'productId',
+                        populate: [
+                            { path: 'categoryId' },
+                            { path: 'unitMeasurementId' }
+                        ]
+                    },
+                }
             })
-            .populate('userId', 'name')
             .populate('warehouseId');
 
         res.json({
             ok: true,
-            input: inputWithRef
+            input: kardexProduct
         })
 
     } catch (error) {

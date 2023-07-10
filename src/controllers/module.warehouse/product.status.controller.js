@@ -41,13 +41,13 @@ const createProductStatus = async (req, res = response) => {
             .populate('userId', 'name')
             .populate('categoryId', 'name')
             .populate('unitMeasurementId', 'name').lean();
-        const productStatus = await ProductStatusSchema.find({ productId: productWithRef._id, state: true })
+        const productStatus = await ProductStatusSchema.find({ productId: productWithRef._id })
             .populate('userId', 'name');
         productWithRef.productStatus = productStatus
-        const populatedUser = transformProductStatus(productWithRef);
+        const populatedProduct = transformProductStatus(productWithRef);
         res.json({
             ok: true,
-            product: populatedUser
+            product: populatedProduct
         });
 
     } catch (error) {
@@ -70,20 +70,21 @@ const updateProductStatus = async (req, res = response) => {
 
         const productStatusUpdate = await ProductStatusSchema.findByIdAndUpdate(productStatusId, newProductSatus, { new: true });
 
-        const productStatusWithRef = await ProductStatusSchema.findById(productStatusUpdate.id)
-            .populate('productId')
-            .populate({
-                path: 'productId',
-                populate: [
-                    { path: 'categoryId' },
-                    { path: 'unitMeasurementId' }
-                ]
-            })
+        //preparamos el nuevo producto
+        const productWithRef = await ProductSchema.findById(productStatusUpdate.productId)
             .populate('userId', 'name')
+            .populate('categoryId', 'name')
+            .populate('unitMeasurementId', 'name').lean();
+        const newProductStatus = await ProductStatusSchema.find({ productId: productStatusUpdate.productId })
+            .populate('userId', 'name');
+        productWithRef.productStatus = newProductStatus;
+        const populatedProduct = transformProductStatus(productWithRef);
+
         res.json({
             ok: true,
-            productStatus: productStatusWithRef
+            product: populatedProduct
         });
+
 
 
     } catch (error) {
@@ -100,28 +101,24 @@ const deleteProductStatus = async (req, res = response) => {
     const productStatusId = req.params.id;
 
     try {
-        const productStatus = await ProductStatusSchema.findById(productStatusId)
-
-        let newProductStatus = { ...productStatus }
-        newProductStatus._doc.state = false;
-
-        const productStatusDelete = await ProductStatusSchema.findByIdAndUpdate(productStatusId, newProductStatus, { new: true });
-
-        const productStatusWithRef = await ProductStatusSchema.findById(productStatusDelete.id)
-            .populate('productId')
-            .populate({
-                path: 'productId',
-                populate: [
-                    { path: 'categoryId' },
-                    { path: 'unitMeasurementId' }
-                ]
-            })
+        //buscamos el id del producto con el estado
+        const productStatus = await ProductStatusSchema.findById(productStatusId);
+        //eliminamos el estado
+        await ProductStatusSchema.findByIdAndDelete(productStatusId);
+        //preparamos el nuevo producto
+        const productWithRef = await ProductSchema.findById(productStatus.productId)
             .populate('userId', 'name')
+            .populate('categoryId', 'name')
+            .populate('unitMeasurementId', 'name').lean();
+        const newProductStatus = await ProductStatusSchema.find({ productId: productStatus.productId })
+            .populate('userId', 'name');
+        productWithRef.productStatus = newProductStatus;
+        const populatedProduct = transformProductStatus(productWithRef);
+
         res.json({
             ok: true,
-            productStatus: productStatusWithRef
+            product: populatedProduct
         });
-
 
     } catch (error) {
         console.log(error);

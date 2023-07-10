@@ -12,7 +12,7 @@ const getProducts = async (req, res = response) => {
             .populate('unitMeasurementId', 'name').lean();
         const populatedProducts = await Promise.all(
             products.map(async (product) => {
-                const productStatus = await ProductStatusSchema.find({ productId: product._id, state: true })
+                const productStatus = await ProductStatusSchema.find({ productId: product._id })
                     .populate('userId', 'name');
                 product.productStatus = productStatus
                 return transformProductStatus(product);
@@ -39,12 +39,23 @@ const createProduct = async (req, res = response) => {
         product.userId = req.uid;
 
         const productSave = await product.save();
+
+        const newProductStatus = new ProductStatusSchema({
+            productId: productSave.id,
+            userId: req.uid,
+            name: 'Ideal',
+            price: req.body.price,
+            discount: req.body.discount,
+            typeDiscount: req.body.typeDiscount,
+        });
+        await newProductStatus.save();
+
         const productWithRef = await ProductSchema.findById(productSave.id)
             .populate('userId', 'name')
             .populate('categoryId', 'name')
             .populate('unitMeasurementId', 'name').lean();
 
-        const productStatus = await ProductStatusSchema.find({ productId: productWithRef._id, state: true })
+        const productStatus = await ProductStatusSchema.find({ productId: productWithRef._id })
             .populate('userId', 'name');
         productWithRef.productStatus = productStatus
         const populatedUser = transformProductStatus(productWithRef);
@@ -71,7 +82,7 @@ const updateProduct = async (req, res = response) => {
             ...req.body
         }
         if (newProduct.visible) {
-            const productStatus = await ProductStatusSchema.find({ productId, state: true })
+            const productStatus = await ProductStatusSchema.find({ productId })
             if (productStatus.length == 0) {
                 return res.status(500).json({
                     errors: [
@@ -88,7 +99,7 @@ const updateProduct = async (req, res = response) => {
             .populate('userId', 'name')
             .populate('categoryId', 'name')
             .populate('unitMeasurementId', 'name').lean();
-        const productStatus = await ProductStatusSchema.find({ productId: productWithRef._id, state: true })
+        const productStatus = await ProductStatusSchema.find({ productId: productWithRef._id })
             .populate('userId', 'name');
         productWithRef.productStatus = productStatus
         const populatedUser = transformProductStatus(productWithRef);
