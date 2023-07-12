@@ -12,6 +12,9 @@ const ProductStatusSchema = require('./module.warehouse/product.status.model');
 const OutputSchema = require('./module.warehouse/output.model');
 const InputSchema = require('./module.warehouse/input.model');
 const KardexProductSchema = require('./module.warehouse/kardex.product.model');
+//module customers
+const TypeDocumentsSchema = require('./module.customer/type.document.model');
+const CustomerSchema = require('./module.customer/customer.model');
 module.exports = {
     //module users
     UserSchema,
@@ -27,5 +30,8 @@ module.exports = {
     OutputSchema,
     InputSchema,
     KardexProductSchema,
-    //
+    //module customers
+    TypeDocumentsSchema,
+    CustomerSchema,
+
 }

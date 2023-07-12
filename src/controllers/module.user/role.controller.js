@@ -24,7 +24,7 @@ const createRol = async (req, res = response) => {
     const rol = new RoleSchema(req.body);
 
     try {
-        rol.user = req.uid;
+        rol.userId = req.uid;
 
 
         const roleSave = await rol.save();

@@ -9,6 +9,7 @@ const {
     unitMEasurementExists,
     productExists,
     productStatusExists,
+    typeDocumentExists,
 } = require('./db-validators');
 
 const {
@@ -29,4 +30,5 @@ module.exports = {
     productExists,
     generarJWT,
     productStatusExists,
+    typeDocumentExists,
 }

@@ -65,6 +65,16 @@ const {
     getKardexProducts,
     getKardexProductsByProductId,
 } = require('./module.warehouse/kardex.product.controller')
+const {
+    getTypeDocuments,
+    createTypeDocument,
+} = require('./module.customer/type.document.controller')
+const {
+    getCustomers,
+    createCustomer,
+    updateCustomer,
+    deleteCustomer,
+} = require('./module.customer/customer.controller')
 module.exports = {
     authUser,
     //module users
@@ -109,4 +119,11 @@ module.exports = {
     createInput,
     getKardexProducts,
     getKardexProductsByProductId,
+    //module customers
+    getTypeDocuments,
+    createTypeDocument,
+    getCustomers,
+    createCustomer,
+    updateCustomer,
+    deleteCustomer,
 }

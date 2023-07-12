@@ -6,6 +6,10 @@ const ProductSchema = Schema({
         ref: 'Users',
         required: true
     },
+    code: {
+        type: String,
+        ref: 'Products'
+    },
     categoryId: {
         type: Schema.Types.ObjectId,
         ref: 'Categories',
@@ -40,28 +44,38 @@ const ProductSchema = Schema({
         type: Boolean,
         default: true
     },
-},
-    { timestamps: true });
+}, { timestamps: true });
+
+ProductSchema.pre('save', function (next) {
+    if (!this.code) {
+        const nameWithoutSpaces = this.name.replace(/\s/g, '');
+        const truncatedName = nameWithoutSpaces.substr(0, 3).toUpperCase();
+        const truncatedId = this._id.toString().substr(0, 2) + this._id.toString().substr(-2);
+        this.code = (truncatedName + truncatedId).toUpperCase();
+    }
+    next();
+});
+
+
 ProductSchema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
     if (object.userId) {
-        object.userId.id = object.userId._id
+        object.userId.id = object.userId._id;
         delete object.userId._id;
         delete object.userId.__v;
     }
     if (object.categoryId) {
-        object.categoryId.id = object.categoryId._id
+        object.categoryId.id = object.categoryId._id;
         delete object.categoryId._id;
         delete object.categoryId.__v;
     }
     if (object.unitMeasurementId) {
-        object.unitMeasurementId.id = object.unitMeasurementId._id
+        object.unitMeasurementId.id = object.unitMeasurementId._id;
         delete object.unitMeasurementId._id;
         delete object.unitMeasurementId.__v;
     }
     return object;
 });
-
 
 module.exports = model('Products', ProductSchema);

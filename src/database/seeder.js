@@ -7,7 +7,8 @@ const {
     UserSchema,
     RoleSchema,
     PermisionSchema,
-    TypeUserSchema
+    TypeUserSchema,
+    TypeDocumentsSchema
 } = require('./../models');
 
 // Conecta a la base de datos
@@ -22,6 +23,8 @@ mongoose.connection.on('connected', () => {
     mongoose.connection.db.dropDatabase()
         .then(async () => {
             console.log('Base de datos borrada correctamente.');
+            //creando TIPOS DE DOCUMENTOS
+            await TypeDocumentsSchema.insertMany(TypeDocuments);
             //creando PERMISOS
             const listPermisions = await PermisionSchema.insertMany(permisions);
             const idPermisions = listPermisions.map(e => e._id);
@@ -74,7 +77,17 @@ mongoose.connection.on('connected', () => {
         });
 });
 
-
+const TypeDocuments = [
+    {
+        name: 'Carnet de identidad'
+    },
+    {
+        name: 'Pasaporte'
+    },
+    {
+        name: 'Nit'
+    },
+];
 //lista de PERMISOS
 const permisions = [
     //CATEGORIAS

@@ -10,6 +10,7 @@ const {
   CategorySchema,
   ProductSchema,
   ProductStatusSchema,
+  TypeDocumentsSchema
 } = require('../models');
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -143,6 +144,22 @@ const productStatusExists = async (name = "", data = "") => {
     throw new Error(`El titulo: ${name}, ya está registrado`);
   }
 };
+
+const typeDocumentExists = async (name = "", data = "") => {
+  // Verificar si la el estado respectivo al producto existe
+
+  const objIdToExclude = new ObjectId(data.req.params.id);
+
+  let existTypeDocument = await TypeDocumentsSchema.findOne({
+    name: name,
+    _id: { $ne: objIdToExclude ?? null },
+    state: true
+  });
+
+  if (existTypeDocument) {
+    throw new Error(`El titulo: ${name}, ya está registrado`);
+  }
+};
 module.exports = {
   typeUserExists,
   roleExists,
@@ -153,4 +170,5 @@ module.exports = {
   unitMEasurementExists,
   productExists,
   productStatusExists,
+  typeDocumentExists,
 };

@@ -25,7 +25,7 @@ const createTypeUser = async (req, res = response) => {
     const typeUser = new TypeUserSchema(req.body);
 
     try {
-        typeUser.user = req.uid;
+        typeUser.userId = req.uid;
 
         const typeUserSave = await typeUser.save();
         const typeUserWithRef = await TypeUserSchema.findById(typeUserSave.id)

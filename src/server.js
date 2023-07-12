@@ -30,8 +30,8 @@ class Server {
             input: '/api/input',
             kardexProduct: '/api/kardexProduct',
             //module customers
-            customer: '/api/customer',
             typeDocument: '/api/typeDocument',
+            customer: '/api/customer',
             sale: '/api/sale',
             typeMethodPay: '/api/typeMethodPay',
             credit: '/api/credit',
@@ -94,6 +94,8 @@ class Server {
         this.app.use(this.paths.output, require('./routes/module.warehouse/output.route'));
         this.app.use(this.paths.kardexProduct, require('./routes/module.warehouse/kardex.product.route'));
         //module customers
+        this.app.use(this.paths.typeDocument, require('./routes/module.customer/type.document.route'));
+        this.app.use(this.paths.customer, require('./routes/module.customer/customer.route'))
         //module orders
         //module reports
     }
