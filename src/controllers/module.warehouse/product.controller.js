@@ -41,6 +41,7 @@ const createProduct = async (req, res = response) => {
         const productSave = await product.save();
 
         const newProductStatus = new ProductStatusSchema({
+
             productId: productSave.id,
             userId: req.uid,
             name: 'Ideal',
