@@ -74,6 +74,7 @@ class Server {
         // Directorio Público
         const publicPath = path.resolve(__dirname, './../public');
         this.app.use(express.static(publicPath));
+
     }
 
     routes() {
@@ -99,6 +100,9 @@ class Server {
         //module orders
         this.app.use(this.paths.order, require('./routes/order.route'))
         //module reports
+        this.app.get('*', (req, res) => {
+            res.sendFile(path.resolve(__dirname, './../public/index.html'))
+        })
     }
 
     listen() {
