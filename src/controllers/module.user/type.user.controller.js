@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { TypeUserSchema } = require('./../../models');
+const { TypeUserSchema, UserSchema } = require('./../../models');
 
 const getTypeUsers = async (req, res = response) => {
 
@@ -77,7 +77,12 @@ const deleteTypeUser = async (req, res = response) => {
 
     const typeUserId = req.params.id;
     try {
-
+        const user = await UserSchema.find({ typeUserId: typeUserId })
+        if (user.length > 0) {
+            return res.status(400).json({
+                errors: [{ msg: "No es posible eliminar este tipo de usuario ya que lo usa un usuario" }]
+            });
+        }
         await TypeUserSchema.findByIdAndDelete(typeUserId);
         res.json({
             ok: true,

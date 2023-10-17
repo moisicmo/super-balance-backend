@@ -34,7 +34,7 @@ const ProductSchema = Schema({
     },
     visible: {
         type: Boolean,
-        default: false
+        default: true
     },
     type: {
         type: String,

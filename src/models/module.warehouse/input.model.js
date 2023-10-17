@@ -1,34 +1,35 @@
 const { Schema, model } = require('mongoose');
 
-const InputSchema = Schema({
-    productStatusId: {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductStatus',
-        required: true
+const InputSchema = Schema(
+    {
+        productStatusId: {
+            type: Schema.Types.ObjectId,
+            ref: 'ProductStatus',
+            required: true
+        },
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Users',
+            required: true
+        },
+        warehouseId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Warehouses',
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: [true, 'La cantidad es obligatoria']
+        },
+        price: {
+            type: Number,
+            required: [true, 'El precio es obligatorio']
+        },
+        dueDate: {
+            type: Date,
+            default: null
+        },
     },
-    userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Users',
-        required: true
-    },
-    warehouseId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Warehouses',
-        required: true
-    },
-    quatity: {
-        type: Number,
-        required: [true, 'La cantidad es obligatoria']
-    },
-    price: {
-        type: Number,
-        required: [true, 'El precio es obligatorio']
-    },
-    dueDate: {
-        type: Date,
-        default: null
-    },
-},
     { timestamps: true });
 InputSchema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();

@@ -1,38 +1,40 @@
 const { Schema, model } = require('mongoose');
 
-const OutputSchema = Schema({
-    productStatusId: {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductStatus',
-        required: true
+const OutputSchema = Schema(
+    {
+        productStatusId: {
+            type: Schema.Types.ObjectId,
+            ref: 'ProductStatus',
+            required: true
+        },
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Users',
+            required: true
+        },
+        warehouseId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Warehouses',
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: [true, 'La cantidad es obligatoria']
+        },
+        price: {
+            type: Number,
+            required: [true, 'El precio es obligatorio']
+        },
+        discount: {
+            type: Number,
+            default: 0.00
+        },
+        typeDiscount: {
+            type: String,
+            default: 'amount'
+        },
     },
-    userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Users',
-        required: true
-    },
-    warehouseId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Warehouses',
-        required: true
-    },
-    quatity: {
-        type: Number,
-        required: [true, 'La cantidad es obligatoria']
-    },
-    price: {
-        type: Number,
-        required: [true, 'El precio es obligatorio']
-    },
-    discount: {
-        type: Number,
-        default: 0.00
-    },
-    typeDiscount: {
-        type: String,
-        default: 'amount'
-    },
-});
+    { timestamps: true });
 OutputSchema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;

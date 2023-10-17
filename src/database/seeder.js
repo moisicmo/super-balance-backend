@@ -90,6 +90,63 @@ const TypeDocuments = [
 ];
 //lista de PERMISOS
 const permisions = [
+    //SUCURSALES
+    {
+        name: 'Ver sucursales',
+        category: 'Sucursales',
+        state: true,
+    },
+    {
+        name: 'Crear sucursales',
+        category: 'Sucursales',
+        state: true,
+    },
+    {
+        name: 'Editar sucursales',
+        category: 'Sucursales',
+        state: true,
+    },
+    {
+        name: 'Eliminar sucursales',
+        category: 'Sucursales',
+        state: true,
+    },
+    //PRODUCTOS
+    {
+        name: 'Ver productos',
+        category: 'Productos',
+        state: true,
+    },
+    {
+        name: 'Crear productos',
+        category: 'Productos',
+        state: true,
+    },
+    {
+        name: 'Editar productos',
+        category: 'Productos',
+        state: true,
+    },
+    {
+        name: 'Eliminar productos',
+        category: 'Productos',
+        state: true,
+    },
+    {
+        name: 'Crear estado de productos eventos',
+        category: 'Productos',
+        state: true,
+    },
+    {
+        name: 'Editar estado de productos eventos',
+        category: 'Productos',
+        state: true,
+    },
+    {
+        name: 'Eliminar estado de productos eventos',
+        category: 'Productos',
+        state: true,
+    },
     //CATEGORIAS
     {
         name: 'Ver categorias',
@@ -111,72 +168,125 @@ const permisions = [
         category: 'Categorias',
         state: true,
     },
-    //EXPOSITORES
+    //UNIDADES DE MEDIDA
     {
-        name: 'Ver expositores',
-        category: 'Expositores',
+        name: 'Ver unidades de medida',
+        category: 'Unidades de medida',
         state: true,
     },
     {
-        name: 'Crear expositores',
-        category: 'Expositores',
+        name: 'Crear unidades de medida',
+        category: 'Unidades de medida',
         state: true,
     },
     {
-        name: 'Editar expositores',
-        category: 'Expositores',
+        name: 'Editar unidades de medida',
+        category: 'Unidades de medida',
         state: true,
     },
     {
-        name: 'Eliminar expositores',
-        category: 'Expositores',
+        name: 'Eliminar unidades de medida',
+        category: 'Unidades de medida',
         state: true,
     },
-    //EVENTOS
+    //MOVIMIENTOS
     {
-        name: 'Ver eventos',
-        category: 'Eventos',
-        state: true,
-    },
-    {
-        name: 'Crear eventos',
-        category: 'Eventos',
+        name: 'Ver movimientos',
+        category: 'Movimientos',
         state: true,
     },
     {
-        name: 'Ver reportes de eventos',
-        category: 'Eventos',
+        name: 'Crear nueva recepcion',
+        category: 'Movimientos',
+        state: true,
+    },
+    //ORDENES
+    {
+        name: 'Ver ordenes',
+        category: 'Ordenes',
         state: true,
     },
     {
-        name: 'Editar eventos',
-        category: 'Eventos',
+        name: 'Crear ordenes',
+        category: 'Ordenes',
         state: true,
     },
     {
-        name: 'Eliminar eventos',
-        category: 'Eventos',
-        state: true,
-    },
-    //USUARIOS
-    {
-        name: 'Ver usuarios',
-        category: 'Usuarios',
+        name: 'Editar ordenes',
+        category: 'Ordenes',
         state: true,
     },
     {
-        name: 'Crear usuarios',
-        category: 'Usuarios',
+        name: 'Eliminar ordenes',
+        category: 'Ordenes',
         state: true,
     },
     {
-        name: 'Editar usuarios',
-        category: 'Usuarios',
+        name: 'Descargar ordenes',
+        category: 'Ordenes',
         state: true,
     },
     {
-        name: 'Eliminar usuarios',
-        category: 'Usuarios',
+        name: 'Generar venta de ordenes',
+        category: 'Ordenes',
+        state: true,
+    },
+    //VENTAS
+    {
+        name: 'Ver ventas',
+        category: 'Ventas',
+        state: true,
+    },
+    {
+        name: 'Descargar venta',
+        category: 'Ventas',
+        state: true,
+    },
+    //CLIENTES
+    {
+        name: 'Ver clientes',
+        category: 'Clientes',
+        state: true,
+    },
+    {
+        name: 'Crear clientes',
+        category: 'Clientes',
+        state: true,
+    },
+    {
+        name: 'Editar clientes',
+        category: 'Clientes',
+        state: true,
+    },
+    {
+        name: 'Eliminar clientes',
+        category: 'Clientes',
+        state: true,
+    },
+    //CREDITOS
+    {
+        name: 'Ver creditos',
+        category: 'Creditos',
+        state: true,
+    },
+    {
+        name: 'Crear creditos',
+        category: 'Creditos',
+        state: true,
+    },
+    {
+        name: 'Editar creditos',
+        category: 'Creditos',
+        state: true,
+    },
+    {
+        name: 'Pago de creditos',
+        category: 'Creditos',
+        state: true,
+    },
+    {
+        name: 'Eliminar creditos',
+        category: 'Creditos',
         state: true,
     },
     //TIPOS DE USUARIO
@@ -198,6 +308,27 @@ const permisions = [
     {
         name: 'Eliminar tipos de usuario',
         category: 'Tipos de usuario',
+        state: true,
+    },
+    //USUARIOS
+    {
+        name: 'Ver usuarios',
+        category: 'Usuarios',
+        state: true,
+    },
+    {
+        name: 'Crear usuarios',
+        category: 'Usuarios',
+        state: true,
+    },
+    {
+        name: 'Editar usuarios',
+        category: 'Usuarios',
+        state: true,
+    },
+    {
+        name: 'Eliminar usuarios',
+        category: 'Usuarios',
         state: true,
     },
     //ROLES
@@ -231,17 +362,6 @@ const permisions = [
     {
         name: 'Ver reportes',
         category: 'Reportes',
-        state: true,
-    },
-    //ESTUDIANTES
-    {
-        name: 'Ver estudiantes',
-        category: 'Estudiantes',
-        state: true,
-    },
-    {
-        name: 'Agregar estudiantes',
-        category: 'Estudiantes',
         state: true,
     },
 ];

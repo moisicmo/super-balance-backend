@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { CategorySchema } = require('../../models');
+const { CategorySchema, ProductSchema } = require('../../models');
 
 const getCategories = async (req, res = response) => {
 
@@ -77,6 +77,12 @@ const deleteCategory = async (req, res = response) => {
     const categoryId = req.params.id;
 
     try {
+        const product = await ProductSchema.find({ categoryId: categoryId })
+        if (product.length > 0) {
+            return res.status(400).json({
+                errors: [{ msg: "No es posible eliminar esta categoria ya que tiene una producto que lo usa" }]
+            });
+        }
         await CategorySchema.findByIdAndDelete(categoryId);
         res.json({
             ok: true,

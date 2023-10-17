@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { RoleSchema } = require('./../../models');
+const { RoleSchema, UserSchema } = require('./../../models');
 
 const getRoles = async (req, res = response) => {
     try {
@@ -78,12 +78,16 @@ const deleteRol = async (req, res = response) => {
     const rolId = req.params.id;
 
     try {
+        const user = await UserSchema.find({ roleId: rolId })
+        if (user.length > 0) {
+            return res.status(400).json({
+                errors: [{ msg: "No es posible eliminar este rol ya que lo usa un usuario" }]
+            });
+        }
         await RoleSchema.findByIdAndDelete(rolId);
         res.json({
             ok: true,
         });
-
-
 
     } catch (error) {
         console.log(error);

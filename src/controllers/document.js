@@ -1,22 +1,23 @@
-
-const { UserSchema } = require('../models');
 const pdfMake = require('pdfmake');
 const path = require('path');
+const numeroEnLetras = require('./convertNumbertoString');
+// import { format } from "date-fns";
 
-const generateDocument = async (student, comprobanteId, responsableId, detail, received, date, folderName) => {
-  const responsable = await UserSchema.findById(responsableId)
-  console.log('documento');
+const { format } = require('date-fns');
+const esES = require('date-fns/locale/es')
+// import esES from 'date-fns/locale/es';
+
+const generateDocument = async (order) => {
   const fonts = {
     Roboto: {
-      normal: path.join(__dirname, '../../assets/fonts/Poppins-Regular.woff2'),
-      bold: path.join(__dirname, '../../assets/fonts/Poppins-Regular.woff2'),
-      italics: path.join(__dirname, '../../assets/fonts/Poppins-Regular.woff2'),
-      bolditalics: path.join(__dirname, '../../assets/fonts/Poppins-Regular.woff2')
+      normal: path.join(__dirname, './../../assets/fonts/Roboto/Roboto-Regular.ttf'),
+      bold: path.join(__dirname, './../../assets/fonts/Roboto/Roboto-Medium.ttf'),
+      italics: path.join(__dirname, './../../assets/fonts/Roboto/Roboto-Italic.ttf'),
+      bolditalics: path.join(__dirname, './../../assets/fonts/Roboto/Roboto-MediumItalic.ttf')
     }
   };
 
   const printer = new pdfMake(fonts);
-
   const docDefinition = {
     content: [
       {
@@ -27,33 +28,21 @@ const generateDocument = async (student, comprobanteId, responsableId, detail, r
               { text: 'SUPER BALANCE', style: 'tableHeader' },
               '',
               { text: 'COMPROBANTE N°', style: 'tableComprobante', },
-              comprobanteId
+              `${order.id}`
             ],
             [
-              { text: 'FACULTAD DE INGENIERIA', style: 'tableHeader' },
-              '',
-              '',
-              '',
-            ],
-            [
-              { text: 'INGENIERIA DE SISTEMAS', style: 'tableHeader' },
+              { text: `Sucursal: ${order.warehouseId.name}`, style: 'tableHeader' },
               '',
               '',
               '',
             ],
-            [
-              { text: 'CENTRO DE ESTUDIANTES', style: 'tableHeader' },
-              '',
-              '',
-              '',
-            ]
           ],
 
         },
         layout: 'noBorders',
       },
       { text: '\n' },
-      { text: 'COMPROBANTE DE PAGO', fontSize: 24, alignment: 'center' },
+      { text: `${order.stateSold ? 'NOTA DE VENTA' : 'PROFORMA DE ORDEN'}`, fontSize: 24, alignment: 'center' },
       { text: '\n' },
       {
         table: {
@@ -61,19 +50,25 @@ const generateDocument = async (student, comprobanteId, responsableId, detail, r
           body: [
             [
               { text: 'Fecha:', style: 'tableTitle' },
-              date,
-              { text: 'Cod. Est.', style: 'tableComprobante', },
-              `${student.code}`
+              `${format(order.createdAt, 'dd MMMM yyyy', { locale: esES })}`,
+              '',
+              '',
             ],
             [
-              { text: 'Nombre:', style: 'tableTitle' },
-              `${student.name} ${student.lastName}`,
+              { text: 'Razon Social:', style: 'tableTitle' },
+              `${order.customerId.name}`,
+              '',
+              '',
+            ],
+            [
+              { text: 'NIT/CI/Otro:', style: 'tableTitle' },
+              `${order.customerId.numberDocument}`,
               '',
               '',
             ],
             [
               { text: 'Emitido por:', style: 'tableTitle' },
-              `${responsable.name} ${responsable.lastName}`,
+              `${order.userId.name} ${order.userId.lastName}`,
               '',
               '',
             ],
@@ -90,15 +85,17 @@ const generateDocument = async (student, comprobanteId, responsableId, detail, r
             [
               { text: 'CANTIDAD', style: 'tableHeader' },
               { text: 'DESCRIPCION', style: 'tableHeader' },
-              { text: 'PRECIO', style: 'tableHeader' },
+              { text: 'PRECIO UNIT.', style: 'tableHeader' },
               { text: 'SUBTOTAL', style: 'tableHeader' },
             ],
-            ...detail.map(element => [
-              `${element.cant}`,
-              element.description,
-              `${element.price}`,
-              `${element.cant * element.price}`,
-            ])
+            ...order.outputIds.map(element => {
+              return [
+                `${element.quantity}`,
+                `${element.productStatusId.productId.code} - ${element.productStatusId.productId.name} - ${element.productStatusId.name}`,
+                `${element.price}`,
+                `${element.quantity * element.price}`,
+              ]
+            })
 
           ],
         },
@@ -108,23 +105,15 @@ const generateDocument = async (student, comprobanteId, responsableId, detail, r
           widths: ['*', '36.8%'],
           body: [
             [
-              { text: `Son: 00/100 Bolivianos`, style: 'tableTitle' },
+              { text: `Son: ${numeroEnLetras(order.total)} 00/100 Bolivianos`, style: 'tableTitle' },
               {
                 table: {
                   widths: ['57.7%', '*'],
                   body: [
                     [
                       { text: 'TOTAL:', style: 'tableComprobante' },
-                      `${detail.reduce((sum, element) => sum + (element.price * element.cant), 0)}`
+                      `${order.total}`
                     ],
-                    [
-                      { text: 'IMPORTE RECIBIDO:', style: 'tableComprobante' },
-                      `${received}`
-                    ],
-                    [
-                      { text: 'IMPORTE DEVUELTO:', style: 'tableComprobante' },
-                      `${received - (detail.reduce((sum, element) => sum + (element.price * element.cant), 0))}`
-                    ]
                   ]
                 }
               }
@@ -152,6 +141,7 @@ const generateDocument = async (student, comprobanteId, responsableId, detail, r
       }
     }
   };
+
   return new Promise((resolve, reject) => {
     const pdfDoc = printer.createPdfKitDocument(docDefinition);
 
@@ -160,19 +150,12 @@ const generateDocument = async (student, comprobanteId, responsableId, detail, r
       chunks.push(chunk);
     });
     pdfDoc.on('end', async () => {
-
       const pdfData = Buffer.concat(chunks);
-      const pdfStream = new Readable();
-      pdfStream.push(pdfData);
-      pdfStream.push(null);
       const pdfBase64 = pdfData.toString('base64');
-
-
-      resolve({ pdfBase64, response });
+      resolve({ pdfBase64 });
     });
     pdfDoc.end();
   });
 };
-
 
 module.exports = generateDocument;

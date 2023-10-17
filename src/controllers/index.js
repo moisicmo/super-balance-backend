@@ -55,7 +55,6 @@ const {
 } = require('./module.warehouse/product.status.controller');
 const {
     getOutputs,
-    createOutput,
 } = require('./module.warehouse/output.controller');
 const {
     getInputs,
@@ -75,6 +74,15 @@ const {
     updateCustomer,
     deleteCustomer,
 } = require('./module.customer/customer.controller')
+const {
+    getOrders,
+    getOrdersSold,
+    getDocument,
+    createOrder,
+    updateOrder,
+    updateOrderSold,
+    deleteOrder,
+} = require('./module.order/order.controller');
 module.exports = {
     authUser,
     //module users
@@ -114,7 +122,6 @@ module.exports = {
     updateProductStatus,
     deleteProductStatus,
     getOutputs,
-    createOutput,
     getInputs,
     createInput,
     getKardexProducts,
@@ -126,4 +133,11 @@ module.exports = {
     createCustomer,
     updateCustomer,
     deleteCustomer,
+    getOrders,
+    getOrdersSold,
+    getDocument,
+    createOrder,
+    updateOrder,
+    updateOrderSold,
+    deleteOrder,
 }

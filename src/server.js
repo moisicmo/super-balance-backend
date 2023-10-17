@@ -97,6 +97,7 @@ class Server {
         this.app.use(this.paths.typeDocument, require('./routes/module.customer/type.document.route'));
         this.app.use(this.paths.customer, require('./routes/module.customer/customer.route'))
         //module orders
+        this.app.use(this.paths.order, require('./routes/order.route'))
         //module reports
     }
 

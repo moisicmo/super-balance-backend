@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { ProductSchema, ProductStatusSchema } = require('../../models');
+const { ProductSchema, ProductStatusSchema, InputSchema } = require('../../models');
 
 const { transformProductStatus } = require('./../../helpers');
 
@@ -82,6 +82,7 @@ const updateProduct = async (req, res = response) => {
         const newProduct = {
             ...req.body
         }
+        newProduct.userId = req.uid;
         if (newProduct.visible) {
             const productStatus = await ProductStatusSchema.find({ productId })
             if (productStatus.length == 0) {
@@ -121,14 +122,32 @@ const updateProduct = async (req, res = response) => {
 const deleteProduct = async (req, res = response) => {
 
     const productId = req.params.id;
-
+    console.log('hi')
     try {
-        await ProductSchema.findByIdAndDelete(productId);
-        res.json({
-            ok: true,
-        });
 
-
+        const productStatus = await ProductStatusSchema.find({ productId: productId })
+        console.log(productStatus)
+        if (productStatus.length > 0) {
+            const input = await InputSchema.find({ productStatusId: productStatus[0].id })
+            console.log(input)
+            if (input.length > 0) {
+                return res.status(400).json({
+                    errors: [{ msg: "No es posible eliminar este producto porque ya tiene movimientos" }]
+                });
+            } else {
+                console.log('borrando')
+                await ProductSchema.findByIdAndDelete(productId);
+                res.json({
+                    ok: true,
+                });
+            }
+        } else {
+            console.log('borrando')
+            await ProductSchema.findByIdAndDelete(productId);
+            res.json({
+                ok: true,
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({

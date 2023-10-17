@@ -18,7 +18,7 @@ router.get('/', getProductStatus)
 router.post(
     '/',
     [
-        check('productId', 'El nombre es obligatorio').not().isEmpty(),
+        check('productId', 'El producto es obligatorio').not().isEmpty(),
         check('name', 'El nombre es obligatorio').not().isEmpty(),
         check('price', 'El precio es obligatorio').not().isEmpty(),
         check('name').custom(productStatusExists),

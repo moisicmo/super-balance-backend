@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { WarehouseSchema } = require('../../models');
+const { WarehouseSchema, UserSchema } = require('../../models');
 
 const getWarehouses = async (req, res = response) => {
 
@@ -81,6 +81,12 @@ const deleteWarehouse = async (req, res = response) => {
     const warehouseId = req.params.id;
 
     try {
+        const warehouse = await WarehouseSchema.findById(warehouseId)
+        if (warehouse.userIds.length > 0) {
+            return res.status(400).json({
+                errors: [{ msg: "No es posible eliminar esta sucursal ya que lo usa un usuario" }]
+            });
+        }
         await WarehouseSchema.findByIdAndDelete(warehouseId);
         res.json({
             ok: true,

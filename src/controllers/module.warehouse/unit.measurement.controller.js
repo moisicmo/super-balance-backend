@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { UnitMeasurementSchema } = require('../../models');
+const { UnitMeasurementSchema, ProductSchema } = require('../../models');
 
 const getMeasurementUnits = async (req, res = response) => {
 
@@ -78,6 +78,12 @@ const deleteunitMeasurement = async (req, res = response) => {
     const unitMeasurementId = req.params.id;
 
     try {
+        const product = await ProductSchema.find({ unitMeasurementId: unitMeasurementId })
+        if (product.length > 0) {
+            return res.status(400).json({
+                errors: [{ msg: "No es posible eliminar esta unidad de medida ya que tiene una producto que lo usa" }]
+            });
+        }
         await UnitMeasurementSchema.findByIdAndDelete(unitMeasurementId);
         res.json({
             ok: true,

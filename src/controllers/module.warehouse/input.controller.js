@@ -50,7 +50,7 @@ const createInput = async (req, res = response) => {
             modelRef: 'Inputs',
             warehouseId: input.warehouseId,
             detail: req.body.detail,
-            stock: kardex ? (kardex.stock + input.quatity) : input.quatity
+            stock: kardex ? (kardex.stock + input.quantity) : input.quantity
         });
         const kardexSave = await newKardex.save();
         const kardexProduct = await KardexProductSchema.findById(kardexSave)

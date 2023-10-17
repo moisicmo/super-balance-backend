@@ -15,6 +15,8 @@ const KardexProductSchema = require('./module.warehouse/kardex.product.model');
 //module customers
 const TypeDocumentsSchema = require('./module.customer/type.document.model');
 const CustomerSchema = require('./module.customer/customer.model');
+//module orders
+const OrderSchema = require('./module.warehouse/order.model');
 module.exports = {
     //module users
     UserSchema,
@@ -33,5 +35,7 @@ module.exports = {
     //module customers
     TypeDocumentsSchema,
     CustomerSchema,
+    //module orders
+    OrderSchema,
 
 }

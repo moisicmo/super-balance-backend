@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { CustomerSchema } = require('./../../models');
+const { CustomerSchema, OrderSchema } = require('./../../models');
 
 const getCustomers = async (req, res = response) => {
     try {
@@ -56,6 +56,7 @@ const updateCustomer = async (req, res = response) => {
         const customerUpdate = await CustomerSchema.findByIdAndUpdate(customerId, newCustomer, { new: true },);
 
         const customerWithRef = await CustomerSchema.findById(customerUpdate.id)
+            .populate('typeDocumentId')
             .populate('userId', 'name');
         res.json({
             ok: true,
@@ -75,6 +76,12 @@ const deleteCustomer = async (req, res = response) => {
     const customerId = req.params.id;
 
     try {
+        const order = await OrderSchema.find({ customerId: customerId })
+        if (order.length > 0) {
+            return res.status(400).json({
+                errors: [{ msg: "No es posible eliminar este cliente ya que tiene una orden o venta hecha" }]
+            });
+        }
         await CustomerSchema.findByIdAndDelete(customerId);
         res.json({
             ok: true,
